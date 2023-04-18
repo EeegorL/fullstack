@@ -1,2 +1,2 @@
 # fullstack
-Helsingin yliopiston full-stack kurssi hahaa
+Helsingin yliopiston full-stack kurssi hahaaa
