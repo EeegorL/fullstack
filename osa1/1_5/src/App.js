@@ -23,7 +23,7 @@ const App = () => {
     <div>
       <Kurssi nimi={course.name}/>
       <Sisalto tiedot={course.parts}/>
-      {/* <TehtavienLukumaara tiedot={parts}/> */}
+      <TehtavienLukumaara tiedot={course.parts}/>
     </div>
   )
 }
@@ -35,15 +35,15 @@ const Kurssi = (kurssi) => {
 }
 
 const Sisalto = (kurssien) => {
-  kurssien.tiedot.map(a => {
-    console.log(a.name + a.exercises)
-    return <p>{a.name}: {a.exercises}</p>
-  });
+  return (
+  kurssien.tiedot.map(tieto => {
+    return <p>{tieto.name}: {tieto.exercises}</p>
+  }))
 
 }
 
-const SisaltoOsa = (nimi,tehtavia) => {
-  return <li key={nimi} style={{color:"red"}}>{nimi}: {tehtavia}</li>
+const SisaltoOsa = (a) => {
+  return <p key={a.name} style={{color:"red"}}>{a.name}: {a.exercises}</p>
 }
 
 const TehtavienLukumaara = (parts) => {
