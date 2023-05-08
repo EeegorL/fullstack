@@ -37,13 +37,14 @@ const Kurssi = (kurssi) => {
 const Sisalto = (kurssien) => {
   return (
   kurssien.tiedot.map(tieto => {
-    return <p>{tieto.name}: {tieto.exercises}</p>
+    return <SisaltoOsa osanTiedot={tieto}/>
   }))
 
 }
 
 const SisaltoOsa = (a) => {
-  return <p key={a.name} style={{color:"red"}}>{a.name}: {a.exercises}</p>
+  console.log(a)
+  return <p key={a.osanTiedot.name} style={{color:"red"}}>{a.osanTiedot.name}: {a.osanTiedot.exercises}</p>
 }
 
 const TehtavienLukumaara = (parts) => {
