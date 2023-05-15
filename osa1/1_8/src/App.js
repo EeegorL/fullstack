@@ -37,9 +37,11 @@ const Stats = ({otsikko, arvostelut}) => {
   let yhteensa = 0; 
   for(let a in arvostelut) yhteensa += arvostelut[a];
 
-  let keskiarvo = summa(arvostelut.good, -arvostelut.bad) / yhteensa  // joo sais varmaan näyttää kauniimmalta mutta en jaksa :P
-
-  return (
+  let keskiarvo = summa(arvostelut.good, arvostelut.neutral, arvostelut.bad) / yhteensa == !NaN 
+  ? summa(arvostelut.good, arvostelut.neutral, -arvostelut.bad) / yhteensa 
+  : 0; // joo sais varmaan näyttää kauniimmalta mutta en jaksa :P
+  
+ if(yhteensa > 0) return (
     <div style={{border:'1px solid black', position:'absolute', padding:'5px', marginTop:'10px'}}>
       <h2>{otsikko}</h2>
       <ul style={{listStyleType:'none', marginLeft:'-2rem'}}>
@@ -48,12 +50,13 @@ const Stats = ({otsikko, arvostelut}) => {
         <li>Huono: {arvostelut.bad}</li>
           <Erotin/>
         <li>Yhteensä: {yhteensa}</li>
-        <li>Keskiarvo: {keskiarvo.toFixed(2)}</li>
+        <li>Keskiarvo: {keskiarvo}</li>
         <li>Positiivisia: {arvostelut.good > 0 ? (arvostelut.good / yhteensa).toFixed(2) * 100 : 0}%</li>
       </ul>
       
     </div>
   )
+  return <h2>Ei palautetta</h2>
 }
 
 const Erotin = () => {

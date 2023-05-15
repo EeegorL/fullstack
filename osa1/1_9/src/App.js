@@ -15,7 +15,8 @@ const App = () => {
          incrementBad:() => setBad(bad + 1)}
          }/>
       <Stats otsikko={"Palautteet yhteenvetona"} arvostelut={{good, neutral, bad}}/>
-    </div>
+      d
+    </div> // oli jo muutenkin Stats-komponenttina :P
   )
 }
 
@@ -37,9 +38,11 @@ const Stats = ({otsikko, arvostelut}) => {
   let yhteensa = 0; 
   for(let a in arvostelut) yhteensa += arvostelut[a];
 
-  let keskiarvo = summa(arvostelut.good, -arvostelut.bad) / yhteensa  // joo sais varmaan näyttää kauniimmalta mutta en jaksa :P
+  let keskiarvo = summa(arvostelut.good, arvostelut.neutral, arvostelut.bad) / yhteensa == !NaN 
+  ? summa(arvostelut.good, arvostelut.neutral, -arvostelut.bad) / yhteensa 
+  : 0; // joo sais varmaan näyttää kauniimmalta mutta en jaksa :P
 
-  return (
+ if(yhteensa > 0) return (
     <div style={{border:'1px solid black', position:'absolute', padding:'5px', marginTop:'10px'}}>
       <h2>{otsikko}</h2>
       <ul style={{listStyleType:'none', marginLeft:'-2rem'}}>
@@ -54,6 +57,7 @@ const Stats = ({otsikko, arvostelut}) => {
       
     </div>
   )
+  return <h2>Ei palautetta</h2>
 }
 
 const Erotin = () => {

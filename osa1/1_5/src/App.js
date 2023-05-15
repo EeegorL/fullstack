@@ -43,7 +43,6 @@ const Sisalto = (kurssien) => {
 }
 
 const SisaltoOsa = (a) => {
-  console.log(a)
   return <p key={a.osanTiedot.name} style={{color:"red"}}>{a.osanTiedot.name}: {a.osanTiedot.exercises}</p>
 }
 
