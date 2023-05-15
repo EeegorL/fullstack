@@ -8,7 +8,7 @@ const App = () => {
   return (
     <div>
       <PageTitle otsikko={"Palautteet"}/>
-      <FeedbackButtons nappitekstit={{good:"hyvä", neutral:"neutraali", bad:"järkyttävä"}} 
+      <FeedbackButtons nappitekstit={{good:"hyvä", neutral:"neutraali", bad:"huono"}} 
       handleClickEvents={
         {incrementGood: () => setGood(good + 1),
          incrementNeutral:() => setNeutral(neutral + 1),
@@ -33,17 +33,46 @@ const FeedbackButtons = (tieto) => {
   )
 }
 
-const Stats = (tieto) => {
+const Stats = ({otsikko, arvostelut}) => {
+  let yhteensa = 0; 
+  for(let a in arvostelut) yhteensa += arvostelut[a];
+
+  let keskiarvo = summa(arvostelut.good, arvostelut.neutral, arvostelut.bad) / yhteensa == !NaN 
+  ? summa(arvostelut.good, arvostelut.neutral, -arvostelut.bad) / yhteensa 
+  : 0; // joo sais varmaan näyttää kauniimmalta mutta en jaksa :P
+
   return (
     <div style={{border:'1px solid black', position:'absolute', padding:'5px', marginTop:'10px'}}>
-      <h2>{tieto.otsikko}</h2>
+      <h2>{otsikko}</h2>
       <ul style={{listStyleType:'none', marginLeft:'-2rem'}}>
-        <li>Hyvä: {tieto.arvostelut.good}</li>
-        <li>Neutraali: {tieto.arvostelut.neutral}</li>
-        <li>Huono: {tieto.arvostelut.bad}</li>
+        <li>Hyvä: {arvostelut.good}</li>
+        <li>Neutraali: {arvostelut.neutral}</li>
+        <li>Huono: {arvostelut.bad}</li>
+          <Erotin/>
+        <li>Yhteensä: {yhteensa}</li>
+        <li>Keskiarvo: {keskiarvo.toFixed(2)}</li>
+        <li>Positiivisia: {arvostelut.good > 0 ? (arvostelut.good / yhteensa).toFixed(2) : 0}%</li>
       </ul>
+      
     </div>
   )
+}
+
+const Erotin = () => {
+  return (
+      <div>
+        <hr></hr>
+      </div>
+    )
+}
+
+const summa = (...arvot) => {
+  let summa = 0;
+  for(let i of arvot) {
+    summa += i;
+    console.log(i)
+  }
+  return summa;
 }
 
 export default App
