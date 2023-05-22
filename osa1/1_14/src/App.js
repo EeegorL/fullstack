@@ -3,7 +3,6 @@ import { useState } from "react";
 const App = () => {
   const [selected, setSelected] = useState(0);
   const [ratings, setRatings] = useState([0, 0, 0, 0, 0, 0, 0, 0]);
-  const [mostVoted, setMostVoted] = useState(0);
 
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -23,30 +22,18 @@ const App = () => {
   }
 
   const voteForAnecdote = () => {
-    let ratingsCopy = ratings.slice(); //slice aiheuttaa react-componentin uudelleen renderöitymisen. ei ole hienoin tapa mutta toimii :P
-    ratingsCopy[selected]++;
+    let ratingsCopy = ratings.slice();
+    ratingsCopy[selected] += 1;
     setRatings(ratingsCopy);
-    findMostVoted();
   }
 
   let selectedAnecdote = anecdotes[selected];
-
-  const findMostVoted = () => {
-
-    var largest = ratings[0];
-
-    for (var i = 0; i < ratings.length; i++) {
-      if (largest < ratings[i]) {
-        largest = ratings[i];
-      }
-    }
-  }
 
   return (
     <div>
       <Data selected={selectedAnecdote} votes={ratings[selected]} />
       <Buttons next={nextAnecdote} vote={voteForAnecdote} />
-      <Favorite />
+      <Favorite anecdotes={anecdotes} ratings={ratings} />
     </div>
   )
 }
@@ -70,13 +57,18 @@ const Buttons = ({ next, vote }) => {
   )
 }
 
-const Favorite = ({ mostVoted }) => {
-  return (
-    <div>
-      <h1>Suosikkijekku</h1>
-      <p>{mostVoted}</p>
-    </div>
-  )
+const Favorite = ({ anecdotes, ratings }) => {
+  let reduceInitialValue = 0;
+  if(ratings.reduce((valueToAccumulate, currentValue)=> currentValue + valueToAccumulate, reduceInitialValue) > 0) { //halusin kokeilla tällaista, for looppi ois toiminu ihan yhtä hyvin
+    let favoriteJoke = anecdotes[ratings.indexOf(Math.max(...ratings))];
+    return (
+      <div>
+        <h1>Suosikkijekku</h1>
+        <p>{favoriteJoke}</p>
+      </div>
+    )
+  }
+
 }
 
 
