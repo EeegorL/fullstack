@@ -15,7 +15,7 @@ const App = () => {
   ]
    
   const nextAnecdote = () => {
-    let next = selected == anecdotes.length - 1 ? 0 : selected + 1;
+    let next = Math.round(Math.random() * (anecdotes.length - 1));
     setSelected(next);
   }
 
@@ -33,7 +33,3 @@ const NextAnecdoteButton = ({clickEvent}) => {
 }
 
 export default App
-
-
-
-import { useState } from 'react'

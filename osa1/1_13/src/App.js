@@ -15,9 +15,11 @@ const App = () => {
     'The only way to go fast, is to go well.'
   ]
 
+  console.log(anecdotes.length)
 
   const nextAnecdote = () => {
-    let next = selected == anecdotes.length - 1 ? 0 : selected + 1;
+    let next = Math.round(Math.random() * (anecdotes.length - 1));
+    console.log(next);
     setSelected(next);
   }
 

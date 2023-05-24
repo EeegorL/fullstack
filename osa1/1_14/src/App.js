@@ -17,7 +17,7 @@ const App = () => {
 
 
   const nextAnecdote = () => {
-    let next = selected == anecdotes.length - 1 ? 0 : selected + 1;
+    let next = Math.floor(Math.random() * (anecdotes.length - 1));
     setSelected(next);
   }
 
@@ -59,7 +59,7 @@ const Buttons = ({ next, vote }) => {
 
 const Favorite = ({ anecdotes, ratings }) => {
   let reduceInitialValue = 0;
-  if(ratings.reduce((valueToAccumulate, currentValue)=> currentValue + valueToAccumulate, reduceInitialValue) > 0) { //halusin kokeilla tällaista, for looppi ois toiminu ihan yhtä hyvin
+  if(ratings.reduce((valueToAccumulate, currentValue) => currentValue + valueToAccumulate, reduceInitialValue) > 0) { //halusin kokeilla tällaista, for looppi ois toiminu ihan yhtä hyvin
     let favoriteJoke = anecdotes[ratings.indexOf(Math.max(...ratings))];
     return (
       <div>
