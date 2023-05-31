@@ -38,8 +38,10 @@ const Lisayslomake = ({ persons, setPersons, newName, setNewName, newNumber, set
 
     if (personsCopy.find(person => person.name == newName)) alert(`${newName} on jo listalla`)
     else {
-      personsCopy.push({ name: newName, number: newNumber });
-      setPersons(personsCopy);
+      if(!newName.length == 0){
+        personsCopy.push({ name: newName, number: newNumber });
+        setPersons(personsCopy);
+      }
     }
   }
 
