@@ -1,27 +1,28 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const App = () => {
-
   const [filter, setFilter] = useState('');
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '0476942345' },
-    { name: 'Harto Ellas', number: '0444875635' }
-  ]);
+  const [persons, setPersons] = useState([]);
+  
+  useEffect(() => {
+    axios.get('http://localhost:3001/persons').then(notes => setPersons(notes.data));
+  }, []);
 
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
 
   return (
     <div>
-    <h2>Puhelinluettelo</h2>
-      <Lisayslomake 
-      persons={persons} setPersons={setPersons}
-      newName={newName} setNewName={setNewName}
-      newNumber={newNumber} setNewNumber={setNewNumber}
+      <h2>Puhelinluettelo</h2>
+      <Lisayslomake
+        persons={persons} setPersons={setPersons}
+        newName={newName} setNewName={setNewName}
+        newNumber={newNumber} setNewNumber={setNewNumber}
       />
       <h2>Numerot</h2>
-      <Filtteri setFilter={setFilter}/>
-      <Henkilot persons={persons} filter={filter}/>
+      <Filtteri setFilter={setFilter} />
+      <Henkilot persons={persons} filter={filter} />
     </div>
   )
 }
@@ -30,7 +31,7 @@ const Lisayslomake = ({ persons, setPersons, newName, setNewName, newNumber, set
   const handleNameChange = (e) => setNewName(e.target.value);
 
   const handleNumberChange = (e) => setNewNumber(e.target.value);
-  
+
   const formSubmitEvent = (e) => {
     e.preventDefault();
 
@@ -38,7 +39,7 @@ const Lisayslomake = ({ persons, setPersons, newName, setNewName, newNumber, set
 
     if (personsCopy.find(person => person.name == newName)) alert(`${newName} on jo listalla`)
     else {
-      if(!newName.length == 0){
+      if (!newName.length == 0) {
         personsCopy.push({ name: newName, number: newNumber });
         setPersons(personsCopy);
       }
@@ -67,8 +68,9 @@ const Filtteri = ({ setFilter }) => {
 const Henkilot = ({ persons, filter }) => {
   return persons.map(person => {
     if (person.name.toLowerCase().includes(filter.toLowerCase())) {
-        return <p key={person.name}>{person.name}: {person.number}</p>
-      }})
+      return <p key={person.name}>{person.name}: {person.number}</p>
+    }
+  })
 }
 
 export default App
