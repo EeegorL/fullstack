@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import {doCreate, doGetAll} from "../src/dbHandler";
+import { doCreate, doGetAll, doDelete } from "../src/dbHandler";
 
 const App = () => {
   const [filter, setFilter] = useState('');
   const [persons, setPersons] = useState([]);
-  
+
   useEffect(() => {
     doGetAll().then(newNotes => setPersons(newNotes));
   }, []);
@@ -23,7 +22,7 @@ const App = () => {
       />
       <h2>Numerot</h2>
       <Filtteri setFilter={setFilter} />
-      <Henkilot persons={persons} filter={filter} />
+      <Henkilot persons={persons} filter={filter} setPersons={setPersons}/>
     </div>
   )
 }
@@ -43,7 +42,7 @@ const Lisayslomake = ({ persons, setPersons, newName, setNewName, newNumber, set
       if (!newName.length == 0) {
         personsCopy.push({ name: newName, number: newNumber });
         setPersons(personsCopy);
-        doCreate({ name: newName, number: newNumber});
+        doCreate({ name: newName, number: newNumber });
       }
     }
   }
@@ -67,12 +66,21 @@ const Filtteri = ({ setFilter }) => {
   </div>
 }
 
-const Henkilot = ({ persons, filter }) => {
+const Henkilot = ({ persons, filter, setPersons }) => {
   return persons.map(person => {
     if (person.name.toLowerCase().includes(filter.toLowerCase())) {
-      return <p key={person.name}>{person.name}: {person.number}</p>
+      return (
+        <div key={person.id}>
+          <p>{person.name}: {person.number} <button onClick={() => onDelete(person, setPersons)}>Poista</button></p>
+        </div>
+      )
     }
   })
+}
+
+const onDelete = async (person, setPersons) => {
+  doDelete(person);
+  setPersons(await doGetAll());
 }
 
 export default App;
