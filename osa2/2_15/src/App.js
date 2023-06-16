@@ -47,9 +47,8 @@ const Lisayslomake = ({ persons, setPersons, newName, setNewName, newNumber, set
     else {
       if (!newName.length == 0) {
         personsCopy.push({ name: newName, number: newNumber });
+        setPersons(personsCopy);
         doCreate({ name: newName, number: newNumber });
-        setPersons(await doGetAll());
-
       }
     }
   }
@@ -77,7 +76,7 @@ const Henkilot = ({ persons, filter, setPersons }) => {
   return persons.map(person => {
     if (person.name.toLowerCase().includes(filter.toLowerCase())) {
       return (
-        <div key={person.name}>
+        <div key={person.id}>
           <p>{person.name}: {person.number} <button onClick={() => onDelete(person, setPersons)}>Poista</button></p>
         </div>
       )
