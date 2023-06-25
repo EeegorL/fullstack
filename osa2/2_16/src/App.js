@@ -55,7 +55,7 @@ const Lisayslomake = ({ persons, setPersons, newName, setNewName, newNumber, set
         personsCopy.push({ name: newName, number: newNumber });
         updateStatus({teksti: "Henkilö lisättiin", tyyppi: "info"}, setStatus);
         await doCreate({ name: newName, number: newNumber });
-        setPersons(personsCopy);
+        setPersons(await doGetAll());
       }
     }
   }
