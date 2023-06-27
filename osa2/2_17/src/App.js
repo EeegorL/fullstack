@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { doCreate, doGetAll, doDelete, doUpdate } from "../src/dbHandler";
+import { doCreate, doGetAll, doDelete, doUpdate, personExists } from "../src/dbHandler";
 
 const App = () => {
   const [filter, setFilter] = useState('');
@@ -101,14 +101,13 @@ const Status = ({ status }) => {
 
 
 const onDelete = async (person, setPersons, setStatus) => {
-  let deletion = await doDelete(person);
-
-  if (deletion.status == true) {
+  if (await personExists(person.id)) {
+    await doDelete(person);
     setPersons(await doGetAll());
-    updateStatus({ teksti: deletion.viesti, tyyppi: "info" }, setStatus);
+    updateStatus({ teksti: "Poisto onnistui", tyyppi: "info" }, setStatus);
   } else {
     setPersons(await doGetAll());
-    updateStatus({ teksti: deletion.viesti, tyyppi: "virhe" }, setStatus);
+    updateStatus({ teksti: "Henkilöä ei ole olemassa", tyyppi: "virhe" }, setStatus);
   }
 }
 

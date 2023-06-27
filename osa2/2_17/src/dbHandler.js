@@ -12,21 +12,27 @@ const doCreate = async newObject => {
 }
 
 const doDelete = async person => {
-  if(window.confirm(`Poistetaanko ${person.name}?`)){
+  if (window.confirm(`Poistetaanko ${person.name}?`)) {
     try {
       await axios.delete(`${baseUrl}/${person.id}`);
-      return {status: true, viesti: "Poisto onnistui"};
+      return { status: true, viesti: "Poisto onnistui" };
     }
-    catch(e) {
-      return {status: false, viesti: "Poisto ei onnistunut: henkilöä ei ole olemassa"};
+    catch (e) {
+      return { status: false, viesti: "Poisto ei onnistunut: henkilöä ei ole olemassa" };
     }
-  
   }
 }
 
 const doUpdate = (id, newPerson) => {
-    axios.put(`${baseUrl}/${id}`, newPerson);
-    return;
+  axios.put(`${baseUrl}/${id}`, newPerson);
+  return;
 }
 
-export { doGetAll, doCreate, doDelete, doUpdate }
+const personExists = async id => {
+  let exists;
+  await axios.get(baseUrl + "/" + id).then(exists = true).catch(e => exists = false);
+
+  return exists;
+}
+
+export { doGetAll, doCreate, doDelete, doUpdate, personExists }
