@@ -47,8 +47,8 @@ const Lisayslomake = ({ persons, setPersons, newName, setNewName, newNumber, set
     else {
       if (!newName.length == 0) {
         personsCopy.push({ name: newName, number: newNumber });
-        setPersons(personsCopy);
         doCreate({ name: newName, number: newNumber });
+        setPersons(await doGetAll());
       }
     }
   }
