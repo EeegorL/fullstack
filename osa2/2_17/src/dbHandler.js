@@ -29,10 +29,8 @@ const doUpdate = (id, newPerson) => {
 }
 
 const personExists = async id => {
-  let exists;
-  await axios.get(baseUrl + "/" + id).then(exists = true).catch(e => exists = false);
-
-  return exists;
+  let all = await doGetAll();
+  return all.some(person => person.id == id);
 }
 
 export { doGetAll, doCreate, doDelete, doUpdate, personExists }
