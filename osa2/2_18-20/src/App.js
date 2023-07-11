@@ -103,7 +103,7 @@ const CountryInfo = ({ country }) => {
 
       <h2>Weather in {country.capital}</h2>
       <p>{Math.round(weather.main?.temp)}°C, {weatherMainData.main}
-        <img src={`https://openweathermap.org/img/wn/${weatherMainData?.icon}.png`} className="weatherIcon" alt="" />
+        <img src={`https://openweathermap.org/img/wn/${weatherMainData?.icon}.png`} className="weatherIcon" alt="rgdgfd" />
       </p>
     </div>
   }
@@ -123,13 +123,12 @@ const CountryInfo = ({ country }) => {
 
       <h2>Weather in {country.name.common}</h2>
       <p>{Math.round(weather.main?.temp)}°C, {weatherMainData.main}
-        <img src={`https://openweathermap.org/img/wn/${weatherMainData.icon}.png`} className="weatherIcon" alt="" /> </p>
+        <img src={`https://openweathermap.org/img/wn/${weatherMainData?.icon}.png`} className="weatherIcon" alt="" /> </p>
     </div>
   }
 }
 
 const showCountryInfo = ({ countries, country, setCountryToShow }) => { //used for the show-buttons
-  console.log(country)
   let foundCountry = countries.filter(obj => obj.cca2 == country.cca2 && obj.cca3 == country.cca3); /*searches for the specific countries by both cca2 and cca3, because some countries,*/
   setCountryToShow(foundCountry);                                                                   /*e.g USA's archipelagos, can have the same cca2 or cca3, but not both */
 }
