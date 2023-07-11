@@ -1,0 +1,27 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.imgNextToText {
+  border:1px solid black;
+  float: right;
+  position: absolute;
+  margin-left: 400px;
+  margin-top: -125px;
+}
+
+.weatherIcon {
+  border:none;
+  float: right;
+  position: absolute;
+  margin-top: -15px;
+}
