@@ -13,19 +13,14 @@ function App() {
 
   return (
     <div>
-      <h1>Maat ja säät</h1>
-      <Filtteri setFilter={setFilter} setCountryToShow={setCountryToShow} />
-      <CountriesList countries={allCountries} filter={filter} countryToShow={countryToShow} setFilter={setFilter} setCountryToShow={setCountryToShow} />
+      <h1 className="header">Maat ja säät</h1>
+      <div className="body">
+        <Filtteri setFilter={setFilter} setCountryToShow={setCountryToShow} />
+        <CountriesList countries={allCountries} filter={filter} countryToShow={countryToShow} setFilter={setFilter} setCountryToShow={setCountryToShow} />
+      </div>
     </div>
   );
 }
-
-
-const clearFilter = (event, setFilter, setCountryToShow) => { //clears filter and possible selected country
-  setFilter(event.target.value);
-  setCountryToShow([]);
-}
-
 
 const Filtteri = ({ setFilter, setCountryToShow }) => {
   return <p>Filtteri <input onChange={event => setFilter(event.currentTarget.value)} onFocus={e => clearFilter(e, setFilter, setCountryToShow)} /></p>
@@ -36,6 +31,8 @@ const CountriesList = ({ countries, filter, countryToShow, setFilter, setCountry
   let countriesToShow = [];
 
   if (countryToShow.length >= 1) {
+    highlightedCountryName(countryToShow[0].name.common.toLowerCase(), filter.toLowerCase());
+
     return <CountryInfo country={countryToShow[0]} /> //if user has pressed the button to select a singular country to be showed 
   }
   if (filter.length == 0) { //if user has not entered a filter
@@ -57,7 +54,10 @@ const CountriesList = ({ countries, filter, countryToShow, setFilter, setCountry
 
       else {
         return countriesToShow.map(country => { //else show ten or less suitable countries
-          return <p key={country.cca2}>{country?.name.common} <button onClick={() => showCountryInfo({ countries, country, setFilter, setCountryToShow })}>Näytä</button></p>
+          return <div key={country.cca2}
+            onClick={() => showCountryInfo({ countries, country, setFilter, setCountryToShow })}
+            className={"countryButton"}>
+            {highlightedCountryName(country.name.common, filter)}</div>
         })
       }
     }
@@ -72,7 +72,7 @@ const CountryInfo = ({ country }) => {
   useEffect(() => {
     getCapitalWeather(country).then(weatherData => setWeather(weatherData));
     getCapitalWeather(country).then(weatherData => setWeatherMainData(weatherData.weather[0])); // idk, I was doing this at midnight and this worked. praise the midnight madness
-  }, []);
+  }, [country]);
 
   if (country.name.common != "Antarctica") { // yes because Antarctica doesn't have ANYTHING, like really no capital, no official languages. It barely even exists
 
@@ -131,6 +131,22 @@ const CountryInfo = ({ country }) => {
 const showCountryInfo = ({ countries, country, setCountryToShow }) => { //used for the show-buttons
   let foundCountry = countries.filter(obj => obj.cca2 == country.cca2 && obj.cca3 == country.cca3); /*searches for the specific countries by both cca2 and cca3, because some countries,*/
   setCountryToShow(foundCountry);                                                                   /*e.g USA's archipelagos, can have the same cca2 or cca3, but not both */
+}
+
+const clearFilter = (event, setFilter, setCountryToShow) => { //clears filter and possible selected country
+  setFilter(event.target.value);
+  setCountryToShow([]);
+}
+
+const highlightedCountryName = (text, partToHighlight) => { //highlights the searched part on found countries
+  let highlightStart = text.toLowerCase().indexOf(partToHighlight);
+  let highlightEnd = highlightStart + partToHighlight.length;
+
+  let stringStart = text.substring(0, highlightStart);
+  let highlightedPart = text.substring(highlightStart, highlightEnd);
+  let stringEnd = text.substring(highlightEnd, text.length);
+
+  return <p>{stringStart}<span className={"highlight"}>{highlightedPart}</span>{stringEnd}</p>
 }
 
 export default App;

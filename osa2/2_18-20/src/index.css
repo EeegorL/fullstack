@@ -4,6 +4,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 code {
@@ -24,4 +26,31 @@ code {
   float: right;
   position: absolute;
   margin-top: -15px;
+}
+
+.header {
+  background-color: #C9C9C9;
+  margin-top: 0;
+  font-size: 5em;
+}
+
+.body {
+  margin-left: 1em;
+  font-size: 1.5em;
+}
+
+.highlight {
+  background-color: rgb(255, 236, 185);
+}
+
+.countryButton {
+  display: table;
+  padding: 5px;
+  padding-left:8px;
+  padding-right: 8px;
+  cursor: pointer;
+}
+
+.countryButton:hover {
+  background-color: #bbbbbb;
 }
