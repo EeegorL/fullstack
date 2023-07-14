@@ -57,7 +57,7 @@ const CountriesList = ({ countries, filter, countryToShow, setFilter, setCountry
           return <div key={country.cca2}
             onClick={() => showCountryInfo({ countries, country, setFilter, setCountryToShow })}
             className={"countryButton"}>
-            {highlightedCountryName(country.name.common, filter)}</div>
+            {highlightedCountryName(country.name.common, filter)}</div> //country's name with the filter matching part highlighted
         })
       }
     }
