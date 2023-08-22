@@ -87,7 +87,8 @@ const Filtteri = ({ setFilter }) => {
 }
 
 const Henkilot = ({ persons, filter, setPersons, setStatus }) => {
-  console.log(persons)
+  console.log(persons);
+  console.log("ererheh")
   return persons.map(person => {
     if (person.name.toLowerCase().includes(filter.toLowerCase())) {
       return (
