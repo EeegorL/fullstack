@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3001/api/person';
+const baseUrl = 'https://fullstack-3-9-11.onrender.com/';
 
 const doGetAll = async () => {
   const request = await axios.get(baseUrl).catch(err => console.log(err));
