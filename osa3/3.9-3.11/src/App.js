@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { doCreate, doGetAll, doDelete, doUpdate, personExists } from "../src/dbHandler";
+import { doCreate, doGetAll, doDelete, /*doUpdate,*/ personExists } from "../src/dbHandler";
 
 const App = () => {
   const [filter, setFilter] = useState('');
@@ -42,8 +42,8 @@ const Lisayslomake = ({ persons, setPersons, newName, setNewName, newNumber, set
 
     let personsCopy = persons.slice(); //slice triggeraa re-renderin
 
-    if (personsCopy.find(person => person.name == newName)) {
-      let existingPerson = personsCopy.find(person => person.name == newName);
+    if (personsCopy.find(person => person.name === newName)) {
+      let existingPerson = personsCopy.find(person => person.name === newName);
 
       alert(`${newName} löytyy jo listalta numerolla ${existingPerson.number}`);
 
@@ -58,7 +58,7 @@ const Lisayslomake = ({ persons, setPersons, newName, setNewName, newNumber, set
       // }
     }
     else {
-      if (!newName.length == 0) {
+      if (!newName.length === 0) {
         personsCopy.push({ name: newName, number: newNumber });
         updateStatus({ teksti: "Henkilö lisättiin", tyyppi: "info" }, setStatus);
         await doCreate({ name: newName, number: newNumber });

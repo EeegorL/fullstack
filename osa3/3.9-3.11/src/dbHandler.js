@@ -3,6 +3,7 @@ const baseUrl = 'http://localhost:3001/api/person';
 
 const doGetAll = async () => {
   const request = await axios.get(baseUrl).catch(err => console.log(err));
+  console.log(request.data)
   return request.data;
 }
 
@@ -30,7 +31,7 @@ const doDelete = async person => {
 
 const personExists = async id => {
   let all = await doGetAll();
-  return all.some(person => person.id == id);
+  return all.some(person => person.id === id);
 }
 
 export { doGetAll, doCreate, doDelete, /*doUpdate,*/ personExists }

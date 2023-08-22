@@ -12,7 +12,6 @@ morgan.token("body", req => {
 
 app.use(cors());
 
-
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 let notes = [
@@ -51,7 +50,7 @@ app.delete('/api/person/:id', (req, res) => {
 
 app.get('/api/person/:id', (req, res) => {
     let id = req.params.id;
-    let personToReturn = notes.filter(note => note.id == id);
+    let personToReturn = notes.filter(note => note.id === id);
     res.json(personToReturn);
 });
 
@@ -78,6 +77,11 @@ app.post("/api/person", (req, res) => {
     else res.send({ error: "name and number must not be empty" })
 });
 
+// gets the static files from the build folder
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + "build", 'index.html'))
+  })
+  
 app.listen(3001, () => {
     console.log(`Server running on port 3001`)
 });
