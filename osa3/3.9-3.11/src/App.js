@@ -87,6 +87,7 @@ const Filtteri = ({ setFilter }) => {
 }
 
 const Henkilot = ({ persons, filter, setPersons, setStatus }) => {
+  if(persons.length === 0) persons = [{id:1, name:"abc", number:123}, {id:2, name:"def", number: 456}];
   console.log(persons);
   console.log("ererheh")
   return persons.map(person => {
