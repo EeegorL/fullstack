@@ -1,6 +1,5 @@
 import axios from 'axios';
-// const baseUrl = "http://localhost:3001/api/person";
-const baseUrl = "api/person";
+const baseUrl = "http://localhost:3001/api/person";
 
 
 const doGetAll = async () => {
