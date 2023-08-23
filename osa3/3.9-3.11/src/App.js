@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { doCreate, doGetAll, doDelete, /*doUpdate,*/ personExists } from "../src/dbHandler";
+import { doCreate, doGetAll, doDelete, /*doUpdate,*/ personExists } from "./dbHandler";
 
 const App = () => {
   const [filter, setFilter] = useState('');
