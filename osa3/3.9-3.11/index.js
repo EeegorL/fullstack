@@ -77,10 +77,6 @@ app.post("/api/person", (req, res) => {
     else res.send({ error: "name and number must not be empty" })
 });
 
-// gets the static files from the build folder
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + "build", 'index.html'))
-  })
   
 app.listen(3001, () => {
     console.log(`Server running on port 3001`)
