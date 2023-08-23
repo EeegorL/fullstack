@@ -1,7 +1,3 @@
-POST http://localhost:3001/api/person
+GET https://fullstack-3-9-11.onrender.com/api/person
 Content-Type: application/json
 
-{
-    "name": "ABC DEsdfsdF",
-    "number":"df"
-}

@@ -50,7 +50,7 @@ app.delete('/api/person/:id', (req, res) => {
 
 app.get('/api/person/:id', (req, res) => {
     let id = req.params.id;
-    let personToReturn = notes.filter(note => note.id === id);
+    let personToReturn = notes.filter(note => note.id === +id);
     res.json(personToReturn);
 });
 
