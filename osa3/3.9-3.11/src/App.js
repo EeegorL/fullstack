@@ -39,7 +39,6 @@ const Lisayslomake = ({ persons, setPersons, newName, setNewName, newNumber, set
 
   const formSubmitEvent = async (e) => {
     e.preventDefault();
-
     let personsCopy = persons.slice(); //slice triggeraa re-renderin
 
     if (personsCopy.find(person => person.name === newName)) {
@@ -58,7 +57,7 @@ const Lisayslomake = ({ persons, setPersons, newName, setNewName, newNumber, set
       // }
     }
     else {
-      if (!newName.length === 0) {
+      if (newName.length > 0 && newNumber.length > 0) {
         personsCopy.push({ name: newName, number: newNumber });
         updateStatus({ teksti: "Henkilö lisättiin", tyyppi: "info" }, setStatus);
         await doCreate({ name: newName, number: newNumber });
