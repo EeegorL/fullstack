@@ -1,0 +1,3 @@
+GET https://fullstack-3-9-11.onrender.com/api/person
+Content-Type: application/json
+
