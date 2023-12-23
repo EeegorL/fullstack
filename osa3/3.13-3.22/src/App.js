@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { doCreate, doGetAll, doDelete, /*doUpdate,*/ personExists } from "./dbHandler";
+import { doCreate, doGetAll, doDelete, doUpdate, personExists } from "./dbHandler";
 
 const App = () => {
   const [filter, setFilter] = useState('');
@@ -44,17 +44,11 @@ const Lisayslomake = ({ persons, setPersons, newName, setNewName, newNumber, set
     if (personsCopy.find(person => person.name === newName)) {
       let existingPerson = personsCopy.find(person => person.name === newName);
 
-      alert(`${newName} löytyy jo listalta numerolla ${existingPerson.number}`);
-
-      /*Laita backend toimimaan edellisessä osassa tehdyn puhelinluettelon frontendin kanssa muilta osin
-       paitsi mahdollisen puhelinnumeron muutoksen osalta,
-       jonka vastaava toiminnallisuus toteutetaan backendiin vasta tehtävässä 3.17.*/
-
-      // if (window.confirm(`Henkilö ${newName} löytyy jo listalta numerolla ${existingPerson.number}. Korvataanko henkilön puhelinnumero numeroksi ${newNumber}`)) {
-      //   doUpdate(existingPerson.id, { name: existingPerson.name, number: newNumber });
-      //   updateStatus({ teksti: "Henkilön tietoja muutettiin", tyyppi: "info" }, setStatus);
-      //   setPersons(await doGetAll());
-      // }
+      if (window.confirm(`Henkilö ${newName} löytyy jo listalta numerolla ${existingPerson.number}. Korvataanko henkilön puhelinnumero numeroksi ${newNumber}`)) {
+        doUpdate(existingPerson.id, newNumber);
+        updateStatus({ teksti: "Henkilön tietoja muutettiin", tyyppi: "info" }, setStatus);
+        setPersons(await doGetAll());
+      }
     }
     else {
       if (newName.length > 0 && newNumber.length > 0) {

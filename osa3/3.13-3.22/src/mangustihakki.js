@@ -26,6 +26,8 @@ const Note = mongoose.model('Note', new mongoose.Schema({ //wanted to try to min
 const getAll = async () => {
     let notes;
     notes = await Note.find({}).then(result => notes = result);
+    console.log("notes")
+    console.log(notes)
     return notes;
 }
 
@@ -51,7 +53,13 @@ const addOne = async person => {
     personToAdd.save().then(result => {return result});
 }
 
+const updateOne = async (id, number) => {;
+    await Note.updateOne({id: id},{
+        number: number
+    })
+}
+
 process.on('uncaughtException', function(err) {
     console.log('Caught exception: ' + err);
   });
-module.exports = { getAll, getOne, deleteOne, addOne };
+module.exports = { getAll, getOne, deleteOne, addOne, updateOne };

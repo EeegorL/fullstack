@@ -20,17 +20,16 @@ const doDelete = async person => {
     catch (e) {
       return { status: false, viesti: "Poisto ei onnistunut: henkilöä ei ole olemassa" };
     }
-
 }
 
-// const doUpdate = (id, newPerson) => {
-//   axios.put(`${baseUrl}/${id}`, newPerson).catch(err => console.log(err));
-//   return;
-// }
+const doUpdate = (id, number) => {
+  axios.put(`${baseUrl}/${id}`, {number:number, id:id}).catch(err => console.log(err));
+  return;
+}
 
 const personExists = async id => {
   let all = await doGetAll();
   return all.some(person => person.id === id);
 }
 
-export { doGetAll, doCreate, doDelete, /*doUpdate,*/ personExists }
+export { doGetAll, doCreate, doDelete, doUpdate, personExists }
