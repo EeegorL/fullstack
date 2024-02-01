@@ -8,9 +8,13 @@ const doGetAll = async () => {
 }
 
 const doCreate = async newObject => {
-  await axios.post(baseUrl, newObject).catch(err => console.log(err));
-  return;
-}
+  try {
+     await axios.post(baseUrl, newObject);
+     return { status: true, viesti: newObject };
+  }
+  catch(e) {
+    return { status: false, viesti: e.response.data.error };
+  }}
 
 const doDelete = async person => {
     try {

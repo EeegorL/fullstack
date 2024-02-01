@@ -53,9 +53,16 @@ const Lisayslomake = ({ persons, setPersons, newName, setNewName, newNumber, set
     else {
       if (newName.length > 0 && newNumber.length > 0) {
         personsCopy.push({ name: newName, number: newNumber });
-        updateStatus({ teksti: "Henkilö lisättiin", tyyppi: "info" }, setStatus);
-        await doCreate({ name: newName, number: newNumber });
-        setPersons(await doGetAll());
+        await doCreate({ name: newName, number: newNumber }).then(res => {
+          if(res.status == true) {
+            updateStatus({ teksti: "Henkilö lisättiin", tyyppi: "info" }, setStatus);
+          }
+          else {
+            updateStatus({ teksti: "Henkilöä ei lisätty", tyyppi: "virhe" }, setStatus)
+          }
+        });
+        await doGetAll().then(result => setPersons(result));
+
       }
     }
   }
@@ -101,9 +108,9 @@ const Status = ({ status }) => {
 
 
 const onDelete = async (person, setPersons, setStatus) => {
-  let deleteConfirmed = window.confirm(`Poistetaanko ${person.name}?`);
 
   if (await personExists(person.id)) {
+    let deleteConfirmed = window.confirm(`Poistetaanko ${person.name}?`);
     if (deleteConfirmed) {
       await doDelete(person);
       setPersons(await doGetAll());
