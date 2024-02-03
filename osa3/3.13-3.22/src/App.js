@@ -58,7 +58,7 @@ const Lisayslomake = ({ persons, setPersons, newName, setNewName, newNumber, set
             updateStatus({ teksti: "Henkilö lisättiin", tyyppi: "info" }, setStatus);
           }
           else {
-            updateStatus({ teksti: "Henkilöä ei lisätty", tyyppi: "virhe" }, setStatus)
+            updateStatus({ teksti: res.viesti, tyyppi: "virhe" }, setStatus)
           }
         });
         await doGetAll().then(result => setPersons(result));
@@ -130,7 +130,12 @@ const onDelete = async (person, setPersons, setStatus) => {
 
 const updateStatus = (statusObject, setStatus) => {
   setStatus(statusObject);
-  setTimeout(() => setStatus({ teksti: "", tyyppi: "empty" }), 1500);
+  if(statusObject.tyyppi == "info") {
+    setTimeout(() => setStatus({ teksti: "", tyyppi: "empty" }), 1500);
+  }
+  else if(statusObject.tyyppi == "virhe") {
+    setTimeout(() => setStatus({ teksti: "", tyyppi: "empty" }), 3000); //enemmän aikaa virheiden lukemiseen
+  }
 }
 
 
