@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react';
+/* eslint-disable react/prop-types */
+import React from "react";
+import { useState, useEffect } from "react";
 import { doCreate, doGetAll, doDelete, doUpdate, personExists } from "./dbHandler";
 
 const App = () => {
-  const [filter, setFilter] = useState('');
+  const [filter, setFilter] = useState("");
   const [persons, setPersons] = useState([]);
 
-  const [newName, setNewName] = useState('');
-  const [newNumber, setNewNumber] = useState('');
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
 
   const [status, setStatus] = useState({});
 
@@ -29,8 +31,8 @@ const App = () => {
       <Filtteri setFilter={setFilter} />
       <Henkilot persons={persons} filter={filter} setPersons={setPersons} setStatus={setStatus} />
     </div>
-  )
-}
+  );
+};
 
 const Lisayslomake = ({ persons, setPersons, newName, setNewName, newNumber, setNewNumber, setStatus }) => {
   const handleNameChange = (e) => setNewName(e.target.value);
@@ -54,18 +56,18 @@ const Lisayslomake = ({ persons, setPersons, newName, setNewName, newNumber, set
       if (newName.length > 0 && newNumber.length > 0) {
         personsCopy.push({ name: newName, number: newNumber });
         await doCreate({ name: newName, number: newNumber }).then(res => {
-          if(res.status == true) {
+          if(res.status === true) {
             updateStatus({ teksti: "Henkilö lisättiin", tyyppi: "info" }, setStatus);
           }
           else {
-            updateStatus({ teksti: res.viesti, tyyppi: "virhe" }, setStatus)
+            updateStatus({ teksti: res.viesti, tyyppi: "virhe" }, setStatus);
           }
         });
         await doGetAll().then(result => setPersons(result));
 
       }
     }
-  }
+  };
 
   return <form onSubmit={formSubmitEvent}>
     <div>
@@ -75,16 +77,16 @@ const Lisayslomake = ({ persons, setPersons, newName, setNewName, newNumber, set
     <div>
       <button type="submit">Lisää</button>
     </div>
-  </form>
-}
+  </form>;
+};
 
 const Filtteri = ({ setFilter }) => {
   const filterHandler = (e) => setFilter(e.target.value);
 
   return <div>
     Filtteri: <input onChange={filterHandler} /><br />
-  </div>
-}
+  </div>;
+};
 
 const Henkilot = ({ persons, filter, setPersons, setStatus }) => {
   return persons.map(person => {
@@ -93,18 +95,18 @@ const Henkilot = ({ persons, filter, setPersons, setStatus }) => {
         <div key={person.id}>
           <p>{person.name}: {person.number} <button onClick={() => onDelete(person, setPersons, setStatus)}>Poista</button></p>
         </div>
-      )
+      );
     }
-  })
-}
+  });
+};
 
 const Status = ({ status }) => {
   return (
     <div className={`status status-${status.tyyppi}`}>
       <p>{status.teksti}</p>
     </div>
-  )
-}
+  );
+};
 
 
 const onDelete = async (person, setPersons, setStatus) => {
@@ -126,17 +128,17 @@ const onDelete = async (person, setPersons, setStatus) => {
     setPersons(await doGetAll());
     updateStatus({ teksti: "Henkilöä ei ole olemassa", tyyppi: "virhe" }, setStatus);
   }
-}
+};
 
 const updateStatus = (statusObject, setStatus) => {
   setStatus(statusObject);
-  if(statusObject.tyyppi == "info") {
+  if(statusObject.tyyppi === "info") {
     setTimeout(() => setStatus({ teksti: "", tyyppi: "empty" }), 1500);
   }
-  else if(statusObject.tyyppi == "virhe") {
+  else if(statusObject.tyyppi === "virhe") {
     setTimeout(() => setStatus({ teksti: "", tyyppi: "empty" }), 3000); //enemmän aikaa virheiden lukemiseen
   }
-}
+};
 
 
 export default App;
