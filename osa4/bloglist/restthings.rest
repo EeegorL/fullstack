@@ -1,0 +1,14 @@
+POST http://localhost:3001/api/blogs/createOne
+Content-Type: application/json
+
+{
+    "title":"Second Book",
+    "author":"You",
+    "url":"null",
+    "likes":122
+}
+
+#   title: String,
+#   author: String,
+#   url: String,
+#   likes: Number
