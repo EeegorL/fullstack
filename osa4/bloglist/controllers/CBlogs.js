@@ -1,5 +1,5 @@
 const BlogRouter = require("express").Router();
-const Blog = require("../models/Blog");
+const Blog = require("../models/MBlog");
 
 
 BlogRouter.get("/getAll", (req, res) => {
