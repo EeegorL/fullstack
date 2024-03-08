@@ -23,6 +23,22 @@ const listWithManyBlogs = [
         __v: 0
       },
       {
+        _id: "5a422abcdb54a676234d17f7",
+        title: "React vs Vue",
+        author: "Michael Chan",
+        url: "https://reactsaladmmmyummy.com/",
+        likes: 7,
+        __v: 0
+      },
+      {
+        _id: "5a422absdf54a676234d17f7",
+        title: "React vs Vue",
+        author: "Michael Chan",
+        url: "https://reactsaladmmmyummy.com/",
+        likes: 7,
+        __v: 0
+      },
+      {
         _id: "5a422aa71b54a676234d17f8",
         title: "Go To Statement Considered Harmful",
         author: "Edsger W. Dijkstra",
@@ -53,14 +69,6 @@ const listWithManyBlogs = [
         url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
         likes: 0,
         __v: 0
-      },
-      {
-        _id: "5a422bc61b54a676234d17fc",
-        title: "Type wars",
-        author: "Robert C. Martin",
-        url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
-        likes: 2,
-        __v: 0
       }
 ];
 
@@ -81,7 +89,7 @@ describe("total likes", () => {
     });
     test("when list has many blogs equals the sum of all blogs' likes", () => {
         const result = listHelper.totalLikes(listWithManyBlogs);
-        assert.strictEqual(result, 36);
+        assert.strictEqual(result, 48);
       });
 });
 
@@ -97,7 +105,7 @@ describe("favorite blog", () => {
         assert.deepStrictEqual(trueMostLiked, mostLiked);
     });
     test("from list of one returns correct", () => {
-        const trueMostLiked =         {
+        const trueMostLiked = {
             title: 'Go To Statement Considered Harmful',
             author: 'Edsger W. Dijkstra',
             likes: 5,
@@ -111,4 +119,26 @@ describe("favorite blog", () => {
         const mostLiked = listHelper.favoriteBlog(listWithNoBlogs);
         assert.deepStrictEqual(trueMostLiked, mostLiked);
     });
+});
+
+describe("author with most blogs from", () => {
+  test("a list of many", () => {
+    const mostBlogs = listHelper.mostBlogs(listWithManyBlogs);
+    const authorWithMostBlogs = {
+      author: "Michael Chan", blogs: 3
+    };
+    assert.deepStrictEqual(mostBlogs, authorWithMostBlogs);
+  });
+  test("a list of one", () => {
+    const mostBlogs = listHelper.mostBlogs(listWithOneBlog);
+    const authorWithMostBlogs = {
+      author: "Edsger W. Dijkstra", blogs: 1
+    };
+    assert.deepStrictEqual(mostBlogs, authorWithMostBlogs);
+  });
+  test("a list of none", () => {
+    const mostBlogs = listHelper.mostBlogs(listWithNoBlogs);
+    const authorWithMostBlogs = null;
+    assert.deepStrictEqual(mostBlogs, authorWithMostBlogs);
+  });
 });
