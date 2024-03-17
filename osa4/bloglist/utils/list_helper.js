@@ -45,6 +45,25 @@ const mostBlogs = (blogs) => {
     };
 };
 
+const mostLikes = (blogs) => {
+    const blogsByAuthor = _.groupBy(blogs, "author");
+    let mostLikes = 0;
+    let mostLikedAuthor = null;
+
+    for(let [blogAuthor, blogData] of Object.entries(blogsByAuthor)) { // {author, [...blogs]};
+        let likesOfAuthor = 0;
+        for(let blog of blogData) {
+            likesOfAuthor += blog.likes;
+        }
+
+        if(likesOfAuthor > mostLikes) {
+            mostLikedAuthor = blogAuthor;
+            mostLikes = likesOfAuthor;
+        }
+    }
+    return {author: mostLikedAuthor, likes: mostLikes};
+};
+
 module.exports = {
-    dummy, totalLikes, favoriteBlog, mostBlogs
+    dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes
 };
