@@ -7,28 +7,24 @@ const Blog = require("../models/MBlog");
 
 const initialBlogs = [
     {
-        "_id":1,
         "title":"1st blog",
         "author":"skibby",
         "url":null,
         "likes":565435
     },
     {
-        "_id":2,
         "title":"2nd blog",
         "author":"me",
         "url":null,
         "likes":34
     },
     {
-        "_id":3,
         "title":"3rd blog",
         "author":"you",
         "url":null,
         "likes":0
     },
     {
-        "_id":4,
         "title":"nth blog",
         "author":"someone idk",
         "url":null,
@@ -64,6 +60,20 @@ describe("backend testing", () => {
         await api.get("/api/blogs/getAll")
         .expect(200)
         .expect("Content-Type", /application\/json/);
+    });
+
+    test("added blogs have id instead of _id", async() => {
+        const newBlog = new Blog({
+            title: "The century of Rizz",
+            author: "Rizz-king",
+            url: "null",
+            likes: 22
+        });
+        newBlog.save();
+
+        const addedBlog = (await api.get("/api/blogs")).body[initialBlogs.length];
+
+        assert(Object.hasOwn(addedBlog, "id") && !Object.hasOwn(addedBlog, "_id") ); //object has id and does not have _id
     });
 
     after(async() => {
