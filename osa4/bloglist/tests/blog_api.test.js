@@ -76,6 +76,20 @@ describe("backend testing", () => {
         assert(Object.hasOwn(addedBlog, "id") && !Object.hasOwn(addedBlog, "_id") ); //object has id and does not have _id
     });
 
+    test("adding a blog increases the blog amount by one", async() => {
+        const newBlog = new Blog({
+            title: "The century of Rizz",
+            author: "Rizz-king",
+            url: "null",
+            likes: 22
+        });
+        newBlog.save();
+        
+        const blogs = await api.get("/api/blogs");
+
+        assert.equal(blogs.body.length, initialBlogs.length + 1);
+    });
+
     after(async() => {
         await mongoose.connection.close()
     });
