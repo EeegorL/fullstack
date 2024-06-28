@@ -76,7 +76,7 @@ describe("backend testing", () => {
         assert(Object.hasOwn(addedBlog, "id") && !Object.hasOwn(addedBlog, "_id") ); //object has id and does not have _id
     });
 
-    test("adding a blog increases the blog amount by one", async() => {
+    test("adding a blog grows 'blogs' by one and blogs contain the added content", async() => {
         const newBlog = new Blog({
             title: "The century of Rizz",
             author: "Rizz-king",
@@ -87,7 +87,8 @@ describe("backend testing", () => {
         
         const blogs = await api.get("/api/blogs");
 
-        assert.equal(blogs.body.length, initialBlogs.length + 1);
+        assert(blogs.body.some(i => i.title == newBlog.get("title") && i.author == newBlog.get("author"))); //blogs contain a blog with title and author of a just added blog
+        assert.equal(blogs.body.length, initialBlogs.length + 1); // amount grows by one
     });
 
     after(async() => {
