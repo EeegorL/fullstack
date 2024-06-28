@@ -4,63 +4,50 @@ const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
 const Blog = require("../models/MBlog");
-
-const initialBlogs = [
-    {
-        "title":"1st blog",
-        "author":"skibby",
-        "url":null,
-        "likes":565435
-    },
-    {
-        "title":"2nd blog",
-        "author":"me",
-        "url":null,
-        "likes":34
-    },
-    {
-        "title":"3rd blog",
-        "author":"you",
-        "url":null,
-        "likes":0
-    },
-    {
-        "title":"nth blog",
-        "author":"someone idk",
-        "url":null,
-        "likes":500
-    }
-];
+const {initialBlogs, blogsInDB, emptyId} = require("../utils/blogs_helper");
 
 const api = supertest(app);
-describe("backend testing", () => {
+describe("initial blogs having data", () => {
     beforeEach(async() => {
         await Blog.deleteMany({});
-        let newBlog = new Blog(initialBlogs[0]);
-        await newBlog.save();
-        newBlog = new Blog(initialBlogs[1]);
-        await newBlog.save();
-        newBlog = new Blog(initialBlogs[2]);
-        await newBlog.save();
-        newBlog = new Blog(initialBlogs[3]);
-        await newBlog.save();
 
-        // initialBlogs.map(async blog => {
-        //     let newBlog = new Blog(blog);
-        //     await newBlog.save();
-        // });
+        for(let data of initialBlogs) {
+            let newBlog = new Blog(data);
+            newBlog.id = newBlog._id.toString(); //!!!!!!!
+            await newBlog.save();
+        }
+    });
+    describe("when fetching all,", () => {
+        test("all blogs are returned", async () => {
+            const blogs = await blogsInDB();
+            assert.strictEqual(blogs.length, initialBlogs.length);
+        });
+
+        test("blogs are returned as json", async () => {
+            await api.get("/api/blogs/getAll")
+                .expect(200)
+                .expect("Content-Type", /application\/json/);
+        });
+
+        test("data contains blog from the initial blogs", async() => {
+            const blogs = await blogsInDB();
+
+            const contains = i => i.title == initialBlogs[2].title && i.author == initialBlogs[2].author;
+
+            assert(blogs.some(contains));
+        });
     });
 
-    test("fetching returns value of the same length as initial data", async() => {
-        const resp = await api.get("/api/blogs");
-        assert.strictEqual(resp._body.length, initialBlogs.length);
+    describe("when fetching one,", () => {
+        test("a blog is successfully returned", async() => {
+            const allBlogs = await blogsInDB();
+            const blogToView = allBlogs[1];
+
+            const blog = await api.get(`/api/blogs/${blogToView.id}`);
+        });
     });
 
-    test("blogs are returned as json", async() => {
-        await api.get("/api/blogs/getAll")
-        .expect(200)
-        .expect("Content-Type", /application\/json/);
-    });
+
 
     test("added blogs have id instead of _id", async() => {
         const newBlog = new Blog({
@@ -69,9 +56,9 @@ describe("backend testing", () => {
             url: "null",
             likes: 22
         });
-        newBlog.save();
+        await newBlog.save();
 
-        const addedBlog = (await api.get("/api/blogs")).body[initialBlogs.length];
+        const addedBlog = (await blogsInDB())[initialBlogs.length];
 
         assert(Object.hasOwn(addedBlog, "id") && !Object.hasOwn(addedBlog, "_id") ); //object has id and does not have _id
     });
@@ -83,13 +70,19 @@ describe("backend testing", () => {
             url: "null",
             likes: 22
         });
-        newBlog.save();
-        
-        const blogs = await api.get("/api/blogs");
+        await newBlog.save();
 
-        assert(blogs.body.some(i => i.title == newBlog.get("title") && i.author == newBlog.get("author"))); //blogs contain a blog with title and author of a just added blog
-        assert.equal(blogs.body.length, initialBlogs.length + 1); // amount grows by one
+        const blogs = await blogsInDB();
+
+        assert(blogs.some(i => //has data from new blog
+            i.title == newBlog.get("title") && 
+            i.author == newBlog.get("author")
+        ));
+
+        assert.equal(blogs.length, initialBlogs.length + 1); // amount grows by one
     });
+
+    test("")
 
     after(async() => {
         await mongoose.connection.close()

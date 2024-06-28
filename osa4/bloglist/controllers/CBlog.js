@@ -2,19 +2,21 @@ const BlogRouter = require("express").Router();
 const Blog = require("../models/MBlog");
 
 
-BlogRouter.get("/", async (req, res) => {
-  let result = await Blog.find({});
+BlogRouter.get("/:id", async (req, res) => {
+  let result = await Blog.find({ "id": req.params.id });
   res.json(result);
 });
 
-BlogRouter.get("/:id", async (req, res) => {
-  let result = await Blog.find({ "id": req.params._id })
+BlogRouter.get("/", async (req, res) => {
+  let result = await Blog.find({});
   res.json(result);
 });
 
 BlogRouter.post("/createOne", async (req, res) => {
   try {
     const blog = new Blog(req.body);
+    blog.id = blog._id.toString();
+
     let result = blog.save()
     res.status(201).json(result);
   } catch (err) {
