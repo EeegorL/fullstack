@@ -3,7 +3,7 @@ const Blog = require("../models/MBlog");
 
 
 BlogRouter.get("/:id", async (req, res) => {
-  let result = await Blog.find({ "id": req.params.id });
+  let result = await Blog.findOne({ "id": req.params.id });
   res.json(result);
 });
 
@@ -17,10 +17,11 @@ BlogRouter.post("/createOne", async (req, res) => {
     const blog = new Blog(req.body);
     blog.id = blog._id.toString();
 
-    let result = blog.save()
+    let result = await blog.save();
+
     res.status(201).json(result);
   } catch (err) {
-    console.log(err);
+      res.status(400).send(err.errors);
   }
 });
 

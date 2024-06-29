@@ -2,10 +2,9 @@ POST http://localhost:3001/api/blogs/createOne
 Content-Type: application/json
 
 {
-    "title":"First Book",
     "author":"Me",
-    "url":"null",
-    "likes":22
+    "title": "sokgopsdkg",
+    "url": "sokgopsdkg"
 }
 
 #   title: String,

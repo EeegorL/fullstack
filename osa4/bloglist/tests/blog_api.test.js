@@ -32,7 +32,10 @@ describe("initial blogs having data", () => {
         test("data contains blog from the initial blogs", async() => {
             const blogs = await blogsInDB();
 
-            const contains = i => i.title == initialBlogs[2].title && i.author == initialBlogs[2].author;
+            const contains = i => 
+                i.title == initialBlogs[2].title && 
+                i.author == initialBlogs[2].author
+            ;
 
             assert(blogs.some(contains));
         });
@@ -44,45 +47,60 @@ describe("initial blogs having data", () => {
             const blogToView = allBlogs[1];
 
             const blog = await api.get(`/api/blogs/${blogToView.id}`);
-        });
+            delete blog.body.id; // id is created by mongoose, thus not saved in initialBlogs
+
+            assert.deepStrictEqual(blog.body, initialBlogs[1]);
+       });
+
+       test("a blog with nonexistent id fails with 404 Not found", async() => {
+            await api.get(`/api/blogs/nonexisentid`).
+            expect(404);
+       });
     });
 
-
-
-    test("added blogs have id instead of _id", async() => {
-        const newBlog = new Blog({
-            title: "The century of Rizz",
-            author: "Rizz-king",
-            url: "null",
-            likes: 22
+    describe("when adding one", () => {
+        test("added blogs have id instead of _id", async() => {
+            const newBlog = new Blog({
+                title: "The century of Rizz",
+                author: "Rizz-king",
+                url: "null",
+                likes: 22
+            });
+            await newBlog.save();
+            const addedBlog = (await blogsInDB())[initialBlogs.length];
+            
+            assert(Object.hasOwn(addedBlog, "id") && !Object.hasOwn(addedBlog, "_id") ); //object has id and does not have _id
         });
-        await newBlog.save();
-
-        const addedBlog = (await blogsInDB())[initialBlogs.length];
-
-        assert(Object.hasOwn(addedBlog, "id") && !Object.hasOwn(addedBlog, "_id") ); //object has id and does not have _id
-    });
-
-    test("adding a blog grows 'blogs' by one and blogs contain the added content", async() => {
-        const newBlog = new Blog({
-            title: "The century of Rizz",
-            author: "Rizz-king",
-            url: "null",
-            likes: 22
+    
+        test("adding a blog grows 'blogs' by one and blogs contain the added content", async() => {
+            const newBlog = new Blog({
+                title: "The century of Rizz",
+                author: "Rizz-king",
+                url: "null",
+                likes: 22
+            });
+            await newBlog.save();
+    
+            const blogs = await blogsInDB();
+    
+            assert(blogs.some(i => //has data from new blog
+                i.title == newBlog.get("title") && 
+                i.author == newBlog.get("author")
+            ));
+    
+            assert.equal(blogs.length, initialBlogs.length + 1); // amount grows by one
         });
-        await newBlog.save();
 
-        const blogs = await blogsInDB();
-
-        assert(blogs.some(i => //has data from new blog
-            i.title == newBlog.get("title") && 
-            i.author == newBlog.get("author")
-        ));
-
-        assert.equal(blogs.length, initialBlogs.length + 1); // amount grows by one
+        test("blog without likes is put at 0 likes", async() => {
+            const blogWithoutLikes = new Blog({
+                title: "titletitle",
+                author: "authorauthor",
+                url: "https://url.url/url"
+            });
+            await blogWithoutLikes.save();
+            assert(blogWithoutLikes.likes != NaN && blogWithoutLikes.likes == 0);
+        });
     });
-
-    test("")
 
     after(async() => {
         await mongoose.connection.close()

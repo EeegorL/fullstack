@@ -4,25 +4,25 @@ const initialBlogs = [
     {
         "title":"1st blog",
         "author":"skibby",
-        "url":null,
+        "url":"posfkgoskdog",
         "likes":565435
     },
     {
         "title":"2nd blog",
         "author":"me",
-        "url":null,
+        "url":"osjgospeårlpåglerh",
         "likes":34
     },
     {
         "title":"3rd blog",
         "author":"you",
-        "url":null,
+        "url":"spgey5ojt",
         "likes":0
     },
     {
         "title":"nth blog",
         "author":"someone idk",
-        "url":null,
+        "url":"hpfjpo6o0+",
         "likes":500
     }
 ];
@@ -32,7 +32,7 @@ const blogsInDB = async() => {
     return blogs.map(note => note.toJSON())
 };
 
-const emptyId = async() => {
+const emptyId = async() => { //DOES NOT WORK
     const tempBlog = new Blog({
         "title":"temptemptemp",
         "author":"temptemptemp",
@@ -40,9 +40,9 @@ const emptyId = async() => {
         "likes":123123123
     });
     await tempBlog.save();
-    await tempBlog.deleteOne();
+    await tempBlog.deleteOne(); // DOES NOT DELETE :(((
 
-    return tempBlog.get("id");
+    return tempBlog._id.toString();
 }
 
 
