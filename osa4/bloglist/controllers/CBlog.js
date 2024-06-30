@@ -20,7 +20,7 @@ BlogRouter.get("/", async (req, res) => {
   res.json(result);
 });
 
-BlogRouter.post("/createOne", async (req, res) => {
+BlogRouter.post("/", async (req, res) => {
   try {
     const blog = new Blog(req.body);
     blog.id = blog._id.toString();

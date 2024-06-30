@@ -5,8 +5,16 @@ const supertest = require("supertest");
 const app = require("../app");
 const Blog = require("../models/MBlog");
 const {initialBlogs, blogsInDB, emptyId} = require("../utils/blogs_helper");
+const bodyParser = require("body-parser");
 
 const api = supertest(app);
+app.use(bodyParser.urlencoded({
+    extended: true
+  }));
+  
+  
+
+
 describe("initial blogs having data", () => {
     beforeEach(async() => {
         await Blog.deleteMany({});
@@ -19,7 +27,7 @@ describe("initial blogs having data", () => {
     });
     describe("when fetching all,", () => {
         test("all blogs are returned", async () => {
-            const blogs = await blogsInDB();
+            const blogs = (await api.get("/api/blogs")).body;
             assert.strictEqual(blogs.length, initialBlogs.length);
         });
 
@@ -30,7 +38,7 @@ describe("initial blogs having data", () => {
         });
 
         test("data contains blog from the initial blogs", async() => {
-            const blogs = await blogsInDB();
+            const blogs = (await api.get("/api/blogs")).body;
 
             const contains = i => 
                 i.title == initialBlogs[2].title && 
@@ -43,35 +51,32 @@ describe("initial blogs having data", () => {
 
     describe("when fetching one,", () => {
         test("a blog is successfully returned", async() => {
-            const allBlogs = await blogsInDB();
+            const allBlogs = (await api.get("/api/blogs")).body;
             const blogToView = allBlogs[1];
 
             const blog = await api.get(`/api/blogs/${blogToView.id}`);
-            delete blog.body.id; // id is created by mongoose, thus not saved in initialBlogs
+            delete blog.body.id; // id is created by mongoose from the _id, thus not saved in initialBlogs
 
             assert.deepStrictEqual(blog.body, initialBlogs[1]);
        });
 
        test("a blog with nonexistent id fails with 404 Not found", async() => {
-
-
         const id = await emptyId();
         await api.get("/api/blogs/" + id)
         .expect(404);
-
        });
     });
 
     describe("when adding one", () => { 
         test("added blogs have id instead of _id", async() => {
-            const newBlog = new Blog({
+            const newBlog = {
                 title: "The century of Rizz",
                 author: "Rizz-king",
                 url: "null",
                 likes: 22
-            });
-            await newBlog.save();
-            const addedBlog = (await blogsInDB())[initialBlogs.length];
+            };
+            await api.post("/api/blogs/").send(newBlog);
+            const addedBlog = (await api.get("/api/blogs")).body[initialBlogs.length];
             
             assert(Object.hasOwn(addedBlog, "id") && !Object.hasOwn(addedBlog, "_id") ); //object has id and does not have _id
         });
