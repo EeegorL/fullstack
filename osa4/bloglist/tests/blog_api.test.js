@@ -24,7 +24,7 @@ describe("initial blogs having data", () => {
         });
 
         test("blogs are returned as json", async () => {
-            await api.get("/api/blogs/getAll")
+            await api.get("/api/blogs")
                 .expect(200)
                 .expect("Content-Type", /application\/json/);
         });
@@ -53,12 +53,16 @@ describe("initial blogs having data", () => {
        });
 
        test("a blog with nonexistent id fails with 404 Not found", async() => {
-            await api.get(`/api/blogs/nonexisentid`).
-            expect(404);
+
+
+        const id = await emptyId();
+        await api.get("/api/blogs/" + id)
+        .expect(404);
+
        });
     });
 
-    describe("when adding one", () => {
+    describe("when adding one", () => { 
         test("added blogs have id instead of _id", async() => {
             const newBlog = new Blog({
                 title: "The century of Rizz",

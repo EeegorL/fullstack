@@ -3,12 +3,20 @@ const Blog = require("../models/MBlog");
 
 
 BlogRouter.get("/:id", async (req, res) => {
-  let result = await Blog.findOne({ "id": req.params.id });
-  res.json(result);
+  try {
+    const result = await Blog.findOne({ "id": req.params.id });
+    if(result.id) {
+      res.status(200).json(result)
+    }
+    else res.status(404).json("Blog does not exist");
+  }
+  catch(err) {
+    res.status(404).json(err);
+  }
 });
 
 BlogRouter.get("/", async (req, res) => {
-  let result = await Blog.find({});
+  const result = await Blog.find({});
   res.json(result);
 });
 
@@ -17,7 +25,7 @@ BlogRouter.post("/createOne", async (req, res) => {
     const blog = new Blog(req.body);
     blog.id = blog._id.toString();
 
-    let result = await blog.save();
+    const result = await blog.save();
 
     res.status(201).json(result);
   } catch (err) {
@@ -27,7 +35,7 @@ BlogRouter.post("/createOne", async (req, res) => {
 
 BlogRouter.delete("/", async (req, res) => {
   try {
-    let result = Blog.deleteMany({})
+    const result = Blog.deleteMany({})
     res.status(201).json(result);
   } catch (err) {
     console.log(err);
@@ -36,7 +44,7 @@ BlogRouter.delete("/", async (req, res) => {
 
 BlogRouter.delete("/:id", (req, res) => {
   try {
-    let result = Blog.deleteOne({ "id": req.params.id })
+    const result = Blog.deleteOne({ "id": req.params.id })
     res.json(result);
   } catch (err) {
     console.log(err);
