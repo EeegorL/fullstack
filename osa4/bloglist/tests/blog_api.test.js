@@ -82,32 +82,34 @@ describe("initial blogs having data", () => {
         });
     
         test("adding a blog grows 'blogs' by one and blogs contain the added content", async() => {
-            const newBlog = new Blog({
+            const newBlog = {
                 title: "The century of Rizz",
                 author: "Rizz-king",
                 url: "null",
                 likes: 22
-            });
-            await newBlog.save();
+            };
+            await api.post("/api/blogs/").send(newBlog);
     
-            const blogs = await blogsInDB();
+            const blogs = (await api.get("/api/blogs/")).body;
     
             assert(blogs.some(i => //has data from new blog
-                i.title == newBlog.get("title") && 
-                i.author == newBlog.get("author")
+                i.title == newBlog.title && 
+                i.author == newBlog.author
             ));
     
             assert.equal(blogs.length, initialBlogs.length + 1); // amount grows by one
         });
 
         test("blog without likes is put at 0 likes", async() => {
-            const blogWithoutLikes = new Blog({
+            const blogWithoutLikes = {
                 title: "titletitle",
                 author: "authorauthor",
                 url: "https://url.url/url"
-            });
-            await blogWithoutLikes.save();
-            assert(blogWithoutLikes.likes != NaN && blogWithoutLikes.likes == 0);
+            };
+            await api.post("/api/blogs/").send(blogWithoutLikes);
+
+            const addedBlog = (await api.get("/api/blogs")).body[[initialBlogs.length]];
+            assert(addedBlog.likes == 0);
         });
     });
 
