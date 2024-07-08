@@ -11,8 +11,6 @@ const api = supertest(app);
 app.use(bodyParser.urlencoded({
     extended: true
   }));
-  
-  
 
 
 describe("initial blogs having data", () => {
@@ -67,7 +65,7 @@ describe("initial blogs having data", () => {
        });
     });
 
-    describe("when adding one", () => { 
+    describe("when adding one,", () => { 
         test("added blogs have id instead of _id", async() => {
             const newBlog = {
                 title: "The century of Rizz",
@@ -110,6 +108,22 @@ describe("initial blogs having data", () => {
 
             const addedBlog = (await api.get("/api/blogs")).body[[initialBlogs.length]];
             assert(addedBlog.likes == 0);
+        });
+    });
+
+    describe("when deleting one,", () => {
+        test("deletion with a valid id succeeds", async () => {
+            const allBlogs = (await api.get("/api/blogs/")).body;
+            const blogToDelete = allBlogs[0];
+
+            await api.delete("/api/blogs/" + blogToDelete.id)
+            .expect(200);
+            
+            assert.equal(initialBlogs.length, (await api.get("/api/blogs/")).body.length - 1);
+
+
+            // assert(allBlogs.length == initialBlogs.length - 1);
+
         });
     });
 

@@ -1,11 +1,6 @@
-POST http://localhost:3001/api/blogs/createOne
+DELETE http://localhost:3001/api/blogs/668c1e422dde35b560bc8195
 Content-Type: application/json
 
-{
-    "author":"Me",
-    "title": "sokgopsdkg",
-    "url": "sokgopsdkg"
-}
 
 #   title: String,
 #   author: String,

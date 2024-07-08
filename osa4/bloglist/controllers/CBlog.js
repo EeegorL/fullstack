@@ -6,7 +6,7 @@ BlogRouter.get("/:id", async (req, res) => {
   try {
     const result = await Blog.findOne({ "id": req.params.id });
     if(result.id) {
-      res.status(200).json(result)
+      res.status(200).json(result);
     }
     else res.status(404).json("Blog does not exist");
   }
@@ -35,19 +35,22 @@ BlogRouter.post("/", async (req, res) => {
 
 BlogRouter.delete("/", async (req, res) => {
   try {
-    const result = Blog.deleteMany({})
-    res.status(201).json(result);
+    const result = await Blog.deleteMany({});
+    res.status(200).json(result);
   } catch (err) {
-    console.log(err);
+    res.status(400).send(err.errors);
   }
 });
 
-BlogRouter.delete("/:id", (req, res) => {
+BlogRouter.delete("/:id", async (req, res) => {
   try {
-    const result = Blog.deleteOne({ "id": req.params.id })
-    res.json(result);
+    const result = await Blog.deleteOne({ "id": req.params.id });
+    if(result.acknowledged && result.deletedCount == 1) {
+          res.status(200).json(result);
+    }
+    else res.status(404).send("Not found");
   } catch (err) {
-    console.log(err);
+    res.status(400).send(err.errors);
   }
 });
 
