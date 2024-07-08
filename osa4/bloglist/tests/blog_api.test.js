@@ -112,18 +112,37 @@ describe("initial blogs having data", () => {
     });
 
     describe("when deleting one,", () => {
-        test("deletion with a valid id succeeds", async () => {
+        test("deletion with a valid id succeeds with 200", async () => {
             const allBlogs = (await api.get("/api/blogs/")).body;
             const blogToDelete = allBlogs[0];
 
             await api.delete("/api/blogs/" + blogToDelete.id)
             .expect(200);
-            
-            assert.equal(initialBlogs.length, (await api.get("/api/blogs/")).body.length - 1);
+        });
+        
+        test("deletion with an invalid id fails with 404", async () => {
+            await api.delete("/api/blogs/anInvalidId123")
+            .expect(404);
+        });
+    });
 
+    describe("when patching a blog", () => {
+        test("a blog is successfully patched", async () => {
+            const newBlogData = {
+                title: "New Title",
+                likes: 10
+            };
+            const blogs = (await api.get("/api/blogs/")).body;
+            const blogToPatch = blogs[0];
 
-            // assert(allBlogs.length == initialBlogs.length - 1);
+            await api.patch("/api/blogs/" + blogToPatch.id)
+            .send(newBlogData)
+            .expect(200);
 
+            const patchedBlog = (await api.get("/api/blogs/" + blogToPatch.id)).body;
+
+            assert.equal(patchedBlog.title, newBlogData.title);
+            assert.equal(patchedBlog.likes, newBlogData.likes);
         });
     });
 

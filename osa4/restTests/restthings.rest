@@ -1,6 +1,9 @@
-DELETE http://localhost:3001/api/blogs/668c1e422dde35b560bc8195
+PATCH http://localhost:3001/api/blogs/668c1e4b2dde35b560bc8197
 Content-Type: application/json
 
+{
+    "author":"Skibid gyatt"
+}
 
 #   title: String,
 #   author: String,
