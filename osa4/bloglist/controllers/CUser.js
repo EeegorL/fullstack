@@ -8,12 +8,17 @@ UserRouter.post("/", async (req, res) => {
         const sRounds = 10;
     
         const user = new User(req.body);
-        
-        user.passwordHash = await bcrypt.hash(user.passwordHash, sRounds);
+        user.password = await bcrypt.hash(user.password, sRounds);
         user.id = user._id.toString();
 
-        const savedUser = await user.save();
-        res.status(201).json(savedUser);
+        const allBlogs = await User.find({});
+        if(allBlogs.some(blog => blog.username == user.username)) {
+            res.status(409).send("Username already exists");
+        }
+        else {
+            const savedUser = await user.save();
+            res.status(201).json(savedUser);
+        }
     }
     catch(err) {
         res.status(400).send(err.errors);
@@ -27,6 +32,18 @@ UserRouter.get("/", async (req, res) => {
     }
     catch(err) {
         res.status(404).send(err);
+    }
+});
+
+UserRouter.get("/:id", async (req, res) => {
+    try{
+        const user = await User.find({id: req.params.id});
+
+        if(user) res.status(200).send(user);
+        else res.status(404);
+    }
+    catch(err) {
+        res.status(404).send(err.errors);
     }
 });
 

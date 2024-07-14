@@ -10,6 +10,7 @@ const bodyParser = require("body-parser");
 
 const supertest = require("supertest");
 const app = require("../app");
+const { initial } = require("lodash");
 const api = supertest(app);
 
 const sRounds = 10;
@@ -23,7 +24,7 @@ describe("db having initial users,", () => {
         await User.deleteMany({});
 
         for(let data of initialUsers) {
-            data.passwordHash = await bcrypt.hash(data.passwordHash, sRounds); // should not be on the client side, but since these are tests its acceptable
+            data.password = await bcrypt.hash(data.password, sRounds); // should not be on the client side, but since these are tests its acceptable
 
             let newUser = new User(data);
             newUser.id = newUser._id.toString();
@@ -31,12 +32,35 @@ describe("db having initial users,", () => {
         }
     });
 
+    describe("when fetching all,", () => {
+        test("all are returned", async () => {
+            await api.get("/api/users")
+            .expect(200);
+
+            const all = (await api.get("/api/users")).body;
+
+            assert.strictEqual(all.length, initialUsers.length);
+        });
+    });
+
+    describe("when fetching one,", () => {
+        test("using correct id fetches a user", async () => {
+            const users = (await api.get("/api/users")).body;
+            const user = users[0];
+
+            const result = (await api.get("/api/users/" + user.id)).body;
+            
+            assert.deepEqual(result[0].username, initialUsers[0].username);
+            assert.deepEqual(result[0].name, initialUsers[0].name);
+        });
+    });
+
     describe("when creating a user,", () => {
         test("a user with valid data is successfully created with 201 Created", async () => {
             const validData = {
                 username: "MegaGamer453",
                 name: "Akseli Holopainen",
-                passwordHash: "meitsinSalasana"
+                password: "meitsinSalasana"
             }
 
             await api.post("/api/users/")
@@ -58,6 +82,18 @@ describe("db having initial users,", () => {
 
             const users = (await api.get("/api/users/")).body;
             assert.strictEqual(users.length, initialUsers.length);
+        });
+
+        test("creation of a user with already existing username fails with 409 Conflict", async () => {
+            const alreadyExistingUser = {
+                username: "username1",
+                name: "Jarkko Koski",
+                password: "salasana123"
+            }
+
+            await api.post("/api/users/")
+            .send(alreadyExistingUser)
+            .expect(409);
         });
     });
 
