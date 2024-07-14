@@ -144,7 +144,7 @@ describe("initial blogs having data", () => {
             assert.equal(patchedBlog.likes, newBlogData.likes);
         });
         
-        test("invalid patch data throws 400 Bad request", async () => {
+        test("invalid patch data throws 400 Bad Request", async () => {
             const invalidBlogData = {
                 title: 52,
                 likes: "fifty two"
