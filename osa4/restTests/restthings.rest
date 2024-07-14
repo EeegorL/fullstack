@@ -1,8 +1,10 @@
-PATCH http://localhost:3001/api/blogs/668c1e4b2dde35b560bc8197
+POST http://localhost:3001/api/users
 Content-Type: application/json
 
 {
-    "author":"Skibid gyatt"
+    "username": "username1",
+    "name": "Mikko Mikkonen",
+    "password": "drowssap"
 }
 
 #   title: String,

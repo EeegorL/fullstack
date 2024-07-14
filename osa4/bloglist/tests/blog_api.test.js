@@ -4,13 +4,13 @@ const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
 const Blog = require("../models/MBlog");
-const {initialBlogs, blogsInDB, emptyId} = require("../utils/blogs_helper");
+const {initialBlogs, blogsInDB} = require("../utils/blogs_helper");
 const bodyParser = require("body-parser");
 
 const api = supertest(app);
 app.use(bodyParser.urlencoded({
     extended: true
-  }));
+}));
 
 
 describe("initial blogs having data", () => {
@@ -59,8 +59,7 @@ describe("initial blogs having data", () => {
        });
 
        test("a blog with nonexistent id fails with 404 Not found", async() => {
-        const id = await emptyId();
-        await api.get("/api/blogs/" + id)
+        await api.get("/api/blogs/thisIdDoesNotExist")
         .expect(404);
        });
     });
@@ -143,6 +142,19 @@ describe("initial blogs having data", () => {
 
             assert.equal(patchedBlog.title, newBlogData.title);
             assert.equal(patchedBlog.likes, newBlogData.likes);
+        });
+        
+        test("invalid patch data throws 400 Bad request", async () => {
+            const invalidBlogData = {
+                title: 52,
+                likes: "fifty two"
+            };
+            const blogs = (await api.get("/api/blogs/")).body;
+            const blogToPatch = blogs[0];
+
+            await api.patch("/api/blogs/" + blogToPatch.id)
+            .send(invalidBlogData)
+            .expect(400);
         });
     });
 

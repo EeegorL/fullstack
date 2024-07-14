@@ -59,7 +59,6 @@ BlogRouter.patch("/:id", async (req, res) => {
     const blog = req.body;
 
     const result = await Blog.findOneAndUpdate({id: req.params.id}, blog);
-    console.log(result);
     res.status(200).send(result);
   }
   catch(err) {

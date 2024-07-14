@@ -27,23 +27,10 @@ const initialBlogs = [
     }
 ];
 
-const blogsInDB = async() => {
+const blogsInDB = async() => { // I want to refrain from using this to make such tests as if they are called by the client, thus api.get(...) instead of Blog.find({})
     const blogs = await Blog.find({})
-    return blogs.map(note => note.toJSON())
+    return blogs.map(blog => blog.toJSON())
 };
 
-const emptyId = async() => { //DOES NOT WORK
-    const tempBlog = new Blog({
-        "title":"temptemptemp",
-        "author":"temptemptemp",
-        "url":"temptemptemp",
-        "likes":123123123
-    });
-    await tempBlog.save();
-    await tempBlog.deleteOne(); // DOES NOT DELETE :(((
 
-    return tempBlog._id.toString();
-}
-
-
-module.exports = {initialBlogs, blogsInDB, emptyId};
+module.exports = {initialBlogs, blogsInDB};
