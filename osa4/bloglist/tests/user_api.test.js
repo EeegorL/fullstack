@@ -53,6 +53,11 @@ describe("db having initial users,", () => {
             assert.deepEqual(result[0].username, initialUsers[0].username);
             assert.deepEqual(result[0].name, initialUsers[0].name);
         });
+
+        test("using incorrect id throws 404 Not found", async () => {
+            await api.get("/api/users/" + "invalidId")
+            .expect(404);
+        });
     });
 
     describe("when creating a user,", () => {

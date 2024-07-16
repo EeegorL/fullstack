@@ -1,5 +1,4 @@
 const User = require("../models/MUser");
-const bcrypt = require("bcrypt");
 
 const initialUsers = [
     {
