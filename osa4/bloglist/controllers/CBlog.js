@@ -1,5 +1,6 @@
 const BlogRouter = require("express").Router();
 const Blog = require("../models/MBlog");
+const User = require("../models/MUser");
 
 
 BlogRouter.get("/:id", async (req, res) => {
@@ -22,14 +23,20 @@ BlogRouter.get("/", async (req, res) => {
 
 BlogRouter.post("/", async (req, res) => {
   try {
+    const authorUser = await User.findById(req.body.user);
+
     const blog = new Blog(req.body);
     blog.id = blog._id.toString();
+
+    if(authorUser) blog.user = authorUser.id; 
+    //until making the login and having actual users make the blog, user will not be added
 
     const result = await blog.save();
 
     res.status(201).json(result);
   } catch (err) {
-      res.status(400).send(err.errors);
+    console.log(err)
+    res.status(400).send(err);
   }
 });
 

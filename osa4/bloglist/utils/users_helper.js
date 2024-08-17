@@ -5,13 +5,13 @@ const initialUsers = [
         username: "nameuser123",
         name: "Karkko Joski",
         password: "sasalana321",
-        notes: []
+        blogs: []
     },
     {
         username: "username1",
         name: "Jarkko Koski",
         password: "salasana123",
-        notes: []
+        blogs: []
     }
 ]
 
@@ -28,7 +28,7 @@ const randomPassword = () => {
 
 const usersInDB = async () => {
     const users = await User.find({})
-    return users.map(note => note.toJSON())
+    return users.map(blog => blog.toJSON())
 };
 
 

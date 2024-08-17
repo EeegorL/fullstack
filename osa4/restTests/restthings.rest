@@ -1,14 +1,15 @@
-# POST http://localhost:3001/api/users
-# Content-Type: application/json
-
-# {
-#     "username": "username1"
-
-# }
-
-
-GET http://localhost:3001/api/users/diuf
+POST http://localhost:3001/api/blogs
 Content-Type: application/json
+
+{
+              "title": "The century of Rizz",
+                "author": "Rizz-king",
+                "url": "null",
+                "likes": 22
+}
+
+# GET http://localhost:3001/api/users/diuf
+# Content-Type: application/json
 
 #   title: String,
 #   author: String,
