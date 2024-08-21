@@ -9,7 +9,7 @@ const { initialBlogs } = require("../utils/blogs_helper");
 const bodyParser = require("body-parser");
 
 const bcrypt = require("bcrypt");
-const { initialUsers } = require("../utils/users_helper");
+const { initialUsers, usersInDB } = require("../utils/users_helper");
 const sRounds = 10;
 
 const api = supertest(app);
@@ -92,11 +92,14 @@ describe("initial blogs having data", () => {
 
     describe("when adding one,", () => {
         test("added blogs have id instead of _id", async () => {
+            const author = (await usersInDB())[0];
+
             const newBlog = {
                 title: "The century of Rizz",
                 author: "Rizz-king",
                 url: "null",
-                likes: 22
+                likes: 22,
+                user: author.id
             };
             await api.post("/api/blogs/").send(newBlog);
             const addedBlog = (await api.get("/api/blogs")).body[initialBlogs.length];
@@ -104,20 +107,14 @@ describe("initial blogs having data", () => {
         });
 
         test("adding a blog grows 'blogs' by one and blogs contain the added content", async () => {
-            const author = await api.post("/api/users").send(authorData);
-
-            const authorData = {
-                username: "MegaGamer453",
-                name: "Akseli Holopainen",
-                password: "meitsinSalasana",
-                likes: 10
-            };
+            const author = (await usersInDB())[0];
 
             const newBlog = {
                 title: "The century of Rizz",
                 author: "Rizz-king",
                 url: "null",
-                likes: 22
+                likes: 22,
+                user: author.id
             };
 
             await api.post("/api/blogs/").send(newBlog);
@@ -133,16 +130,36 @@ describe("initial blogs having data", () => {
         });
 
         test("blog without likes is put at 0 likes", async () => {
+            const author = (await usersInDB())[1];
+
             const blogWithoutLikes = {
                 title: "titletitle",
                 author: "authorauthor",
-                url: "https://url.url/url"
+                url: "https://url.url/url",
+                user: author.id
             };
             await api.post("/api/blogs/").send(blogWithoutLikes);
 
             const allBlogs = (await api.get("/api/blogs/")).body;
             const addedBlog = allBlogs[allBlogs.length - 1];
             assert(addedBlog.likes == 0);
+        });
+
+        test("creating a blog adds its id to the authors blog list", async () => {
+            const author = (await usersInDB())[1];
+            const blogWithoutLikes = {
+                title: "titletitle",
+                author: "authorauthor",
+                url: "https://url.url/url",
+                likes: 0,
+                user: author.id
+            };
+            await api.post("/api/blogs/").send(blogWithoutLikes);
+
+            const userWithAddedBlog = (await usersInDB())[1];
+            const allUsers = await User.find({}).populate("blogs")
+
+            assert(userWithAddedBlog.blogs.length > 0);
         });
     });
 

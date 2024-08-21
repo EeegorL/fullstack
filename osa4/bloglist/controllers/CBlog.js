@@ -28,8 +28,9 @@ BlogRouter.post("/", async (req, res) => {
     const blog = new Blog(req.body);
     blog.id = blog._id.toString();
 
-    if(authorUser) blog.user = authorUser.id; 
-    //until making the login and having actual users make the blog, user will not be added
+    blog.user = authorUser.id; 
+    authorUser.blogs.push(blog);
+    authorUser.save();
 
     const result = await blog.save();
 
