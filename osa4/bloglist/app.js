@@ -4,6 +4,7 @@ const cors = require("cors");
 
 const blogRouter = require("./controllers/CBlog");
 const usersRouter = require("./controllers/CUser");
+const loginRouter = require("./controllers/CLogin");
 
 const logger = require("./utils/logger");
 const mongoose = require("mongoose");
@@ -24,5 +25,6 @@ app.use(express.json());
 
 app.use("/api/blogs", blogRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/login", loginRouter);
 
 module.exports = app;

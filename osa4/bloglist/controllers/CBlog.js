@@ -2,10 +2,13 @@ const BlogRouter = require("express").Router();
 const Blog = require("../models/MBlog");
 const User = require("../models/MUser");
 
+const jwt = require("jsonwebtoken");
+const { tokenExtractor } = require("../utils/middleware");
+BlogRouter.use(tokenExtractor);
 
 BlogRouter.get("/:id", async (req, res) => {
   try {
-    const result = await Blog.findOne({ "id": req.params.id });
+    const result = await Blog.findOne({ "id": req.params.id }).populate("user");
     if(result.id) {
       res.status(200).json(result);
     }
@@ -17,13 +20,17 @@ BlogRouter.get("/:id", async (req, res) => {
 });
 
 BlogRouter.get("/", async (req, res) => {
-  const result = await Blog.find({});
+  const result = await Blog.find({}).populate("user");
   res.json(result);
 });
 
 BlogRouter.post("/", async (req, res) => {
   try {
-    const authorUser = await User.findById(req.body.user);
+    const decodedToken = jwt.verify(req.token, process.env.SECRET)
+    if (!decodedToken.id) {
+      return response.status(401).json({error: "invalid token"});
+    }
+    const authorUser = await User.findById(decodedToken.id)
 
     const blog = new Blog(req.body);
     blog.id = blog._id.toString();
@@ -73,6 +80,5 @@ BlogRouter.patch("/:id", async (req, res) => {
     res.status(400).send(err.errors);
   }
 });
-
 
 module.exports = BlogRouter;

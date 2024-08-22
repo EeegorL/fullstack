@@ -92,22 +92,27 @@ describe("initial blogs having data", () => {
 
     describe("when adding one,", () => {
         test("added blogs have id instead of _id", async () => {
-            const author = (await usersInDB())[0];
+           const loginToken = (await api.post("/api/login/").send({username: "username1", password: "salasana123"})).body.token;
+           const author = (await usersInDB())[0];
 
-            const newBlog = {
+           const newBlog = {
                 title: "The century of Rizz",
                 author: "Rizz-king",
                 url: "null",
                 likes: 22,
                 user: author.id
             };
-            await api.post("/api/blogs/").send(newBlog);
+            await api.post("/api/blogs/")
+                .send(newBlog)
+                .set("Authorization", `Bearer ${loginToken}`);
+
             const addedBlog = (await api.get("/api/blogs")).body[initialBlogs.length];
             assert(Object.hasOwn(addedBlog, "id") && !Object.hasOwn(addedBlog, "_id")); //object has id and does not have _id
         });
 
         test("adding a blog grows 'blogs' by one and blogs contain the added content", async () => {
-            const author = (await usersInDB())[0];
+            const loginToken = (await api.post("/api/login/").send({username: "username1", password: "salasana123"})).body.token;
+            const author = (await usersInDB())[1];
 
             const newBlog = {
                 title: "The century of Rizz",
@@ -117,19 +122,22 @@ describe("initial blogs having data", () => {
                 user: author.id
             };
 
-            await api.post("/api/blogs/").send(newBlog);
+            await api.post("/api/blogs/")
+            .send(newBlog)
+            .set("Authorization", `Bearer ${loginToken}`);
 
             const blogs = (await api.get("/api/blogs/")).body;
 
             assert(blogs.some(i => //has data from new blog
                 i.title == newBlog.title &&
-                i.author == newBlog.author
+                i.user == newBlog.user
             ));
 
             assert.equal(blogs.length, initialBlogs.length + 1); // amount grows by one
         });
 
         test("blog without likes is put at 0 likes", async () => {
+            const loginToken = (await api.post("/api/login/").send({username: "username1", password: "salasana123"})).body.token;
             const author = (await usersInDB())[1];
 
             const blogWithoutLikes = {
@@ -138,7 +146,9 @@ describe("initial blogs having data", () => {
                 url: "https://url.url/url",
                 user: author.id
             };
-            await api.post("/api/blogs/").send(blogWithoutLikes);
+            await api.post("/api/blogs/")
+            .send(blogWithoutLikes)
+            .set("Authorization", `Bearer ${loginToken}`);
 
             const allBlogs = (await api.get("/api/blogs/")).body;
             const addedBlog = allBlogs[allBlogs.length - 1];
@@ -146,7 +156,9 @@ describe("initial blogs having data", () => {
         });
 
         test("creating a blog adds its id to the authors blog list", async () => {
+            const loginToken = (await api.post("/api/login/").send({username: "username1", password: "salasana123"})).body.token;
             const author = (await usersInDB())[1];
+            
             const blogWithoutLikes = {
                 title: "titletitle",
                 author: "authorauthor",
@@ -154,10 +166,11 @@ describe("initial blogs having data", () => {
                 likes: 0,
                 user: author.id
             };
-            await api.post("/api/blogs/").send(blogWithoutLikes);
+            await api.post("/api/blogs/")
+            .send(blogWithoutLikes)
+            .set("Authorization", `Bearer ${loginToken}`);
 
             const userWithAddedBlog = (await usersInDB())[1];
-            const allUsers = await User.find({}).populate("blogs")
 
             assert(userWithAddedBlog.blogs.length > 0);
         });
