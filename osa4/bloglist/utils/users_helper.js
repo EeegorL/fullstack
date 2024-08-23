@@ -13,7 +13,7 @@ const initialUsers = [
         password: "salasana123",
         blogs: []
     }
-]
+];
 
 const randomPassword = () => {
     const testSymbols = ["fish","dog","cat","car","elephant","fox","window","vase","mouse","1","2","3","4","5","6","7","8","9"]; // I know there's a better way but this will work for now
