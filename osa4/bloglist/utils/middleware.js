@@ -38,7 +38,9 @@ const userExtractor = (req, res, next) => {
         const token = auth.replace("Bearer ", "");
         const decodedToken = jwt.decode(token, process.env.SECRET);
 
-        req.user = {
+        if(!decodedToken) req.user = null;
+        
+        else req.user = {
             id: decodedToken.id,
             username: decodedToken.username
         };

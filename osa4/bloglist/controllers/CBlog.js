@@ -83,10 +83,23 @@ BlogRouter.delete("/:id", async (req, res, next) => {
 
 BlogRouter.patch("/:id", async (req, res, next) => {
   try {
-    const blog = req.body;
+    const blogToPatch = await Blog.findById(req.params.id);
+    if(blogToPatch) {
+      if (!req.user) {
+        return res.status(401).json({err: "invalid token"});
+      }
+      const blogToPatchAuthor = await User.find({id: blogToPatch.user.toString()});
+      if(!(req.user.username === blogToPatchAuthor[0].username)) {
+        return res.status(401).json({err: "Not authorized to update"});
+      }
+      const blog = req.body;
+      const result = await Blog.findOneAndUpdate({id: req.params.id}, blog);
 
-    const result = await Blog.findOneAndUpdate({id: req.params.id}, blog);
-    res.status(200).send(result);
+      res.status(200).send(result);
+    }
+    else {
+      res.status(404).send("Not found");
+    }
   }
   catch(err) {
     next(err);

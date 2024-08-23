@@ -172,6 +172,26 @@ describe("initial blogs having data", () => {
 
             assert(userWithAddedBlog.blogs.length > 0);
         });
+        test("unauthorized addition of a blog fails with 401", async () => {
+            const loginToken = (await api.post("/api/login/").send({ username: "wrongUsername", password: "" })).body.token;
+            const author = (await usersInDB())[1];
+
+            const blogWithoutLikes = {
+                title: "titletitle",
+                author: "authorauthor",
+                url: "https://url.url/url",
+                likes: 0,
+                user: author.id
+            };
+            await api.post("/api/blogs/")
+                .send(blogWithoutLikes)
+                .set("Authorization", `Bearer ${loginToken}`)
+                .expect(401);
+
+            const userWithAddedBlog = (await usersInDB())[1];
+
+            assert(userWithAddedBlog.blogs.length == 0);
+        });
     });
 
     describe("when deleting one,", () => {
@@ -190,19 +210,33 @@ describe("initial blogs having data", () => {
             await api.delete("/api/blogs/" + await nonExistentId())
                 .expect(404);
         });
+
+        test("unauthorized deletion fails with 401", async () => {
+            const loginToken = (await api.post("/api/login/").send({ username: "wrongUsername", password: "wrongPassword" })).body.token;
+
+            const allBlogs = (await api.get("/api/blogs/")).body;
+            const blogToDelete = allBlogs[2];
+
+            await api.delete("/api/blogs/" + blogToDelete.id)
+                .set("Authorization", `Bearer ${loginToken}`)
+                .expect(401);
+        });
     });
 
     describe("when patching a blog", () => {
         test("a blog is successfully patched", async () => {
+            const loginToken = (await api.post("/api/login/").send({ username: "username1", password: "salasana123" })).body.token;
+
             const newBlogData = {
                 title: "New Title",
                 likes: 10
             };
             const blogs = (await api.get("/api/blogs/")).body;
-            const blogToPatch = blogs[0];
+            const blogToPatch = blogs[2];
 
             await api.patch("/api/blogs/" + blogToPatch.id)
                 .send(newBlogData)
+                .set("Authorization", `Bearer ${loginToken}`)
                 .expect(200);
 
             const patchedBlog = (await api.get("/api/blogs/" + blogToPatch.id)).body;
@@ -212,16 +246,35 @@ describe("initial blogs having data", () => {
         });
 
         test("invalid patch data throws 400 Bad Request", async () => {
+            const loginToken = (await api.post("/api/login/").send({ username: "username1", password: "salasana123" })).body.token;
+
             const invalidBlogData = {
                 title: 52,
                 likes: "fifty two"
             };
             const blogs = (await api.get("/api/blogs/")).body;
-            const blogToPatch = blogs[0];
+            const blogToPatch = blogs[2];
 
             await api.patch("/api/blogs/" + blogToPatch.id)
                 .send(invalidBlogData)
+                .set("Authorization", `Bearer ${loginToken}`)
                 .expect(400);
+        });
+
+        test("unauthorized patching fails with 401", async () => {
+            const loginToken = (await api.post("/api/login/").send({ username: "1emanresu", password: "321anasalas" })).body.token;
+
+            const invalidBlogData = {
+                title: 52,
+                likes: "fifty two"
+            };
+            const blogs = (await api.get("/api/blogs/")).body;
+            const blogToPatch = blogs[2];
+
+            await api.patch("/api/blogs/" + blogToPatch.id)
+                .send(invalidBlogData)
+                .set("Authorization", `Bearer ${loginToken}`)
+                .expect(401);
         });
     });
 
