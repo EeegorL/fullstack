@@ -9,7 +9,7 @@ UserRouter.post("/", async (req, res, next) => {
         const sRounds = 10;
     
         const user = new User(req.body);
-        if(user.password.length < 3) {
+        if(!user.password || user.password.length < 3) {
             res.status(400).json({error: "password must be atleast 3 characters long"});
         }
         else {

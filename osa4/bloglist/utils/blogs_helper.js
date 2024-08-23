@@ -32,5 +32,16 @@ const blogsInDB = async() => { // I want to refrain from using this to make such
     return blogs.map(blog => blog.toJSON())
 };
 
+const nonExistentId = async () => {
+    const placeholderBlog = new Blog(    {
+        "title":"this blog does not exist",
+        "author":"no one",
+        "url":"no url",
+        "likes":0
+    });
+    await placeholderBlog.deleteOne();
+    
+    return placeholderBlog._id.toString();
+}
 
-module.exports = {initialBlogs, blogsInDB};
+module.exports = {initialBlogs, blogsInDB, nonExistentId};

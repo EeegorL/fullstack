@@ -5,7 +5,7 @@ const supertest = require("supertest");
 const app = require("../app");
 const Blog = require("../models/MBlog");
 const User = require("../models/MUser");
-const { initialBlogs } = require("../utils/blogs_helper");
+const { initialBlogs, nonExistentId } = require("../utils/blogs_helper");
 const bodyParser = require("body-parser");
 
 const bcrypt = require("bcrypt");
@@ -30,7 +30,7 @@ describe("initial blogs having data", () => {
             newUser.id = newUser._id.toString();
             await newUser.save();
         }
-        let blogOrder = [0,0,1,1];
+        let blogOrder = [0, 0, 1, 1];
         let i = 0;
         const users = (await api.get("/api/users")).body;
 
@@ -84,18 +84,18 @@ describe("initial blogs having data", () => {
             assert.deepStrictEqual(blog.body, initialBlogs[1]);
         });
 
-        test("a blog with nonexistent id fails with 404 Not found", async () => {
-            await api.get("/api/blogs/thisIdDoesNotExist")
+        test("a blog with nonexistant id fails with 404 Not found", async () => {
+            await api.get("/api/blogs/" + nonExistentId())
                 .expect(404);
         });
     });
 
     describe("when adding one,", () => {
         test("added blogs have id instead of _id", async () => {
-           const loginToken = (await api.post("/api/login/").send({username: "username1", password: "salasana123"})).body.token;
-           const author = (await usersInDB())[0];
+            const loginToken = (await api.post("/api/login/").send({ username: "username1", password: "salasana123" })).body.token;
+            const author = (await usersInDB())[0];
 
-           const newBlog = {
+            const newBlog = {
                 title: "The century of Rizz",
                 author: "Rizz-king",
                 url: "null",
@@ -111,7 +111,7 @@ describe("initial blogs having data", () => {
         });
 
         test("adding a blog grows 'blogs' by one and blogs contain the added content", async () => {
-            const loginToken = (await api.post("/api/login/").send({username: "username1", password: "salasana123"})).body.token;
+            const loginToken = (await api.post("/api/login/").send({ username: "username1", password: "salasana123" })).body.token;
             const author = (await usersInDB())[1];
 
             const newBlog = {
@@ -123,21 +123,19 @@ describe("initial blogs having data", () => {
             };
 
             await api.post("/api/blogs/")
-            .send(newBlog)
-            .set("Authorization", `Bearer ${loginToken}`);
+                .send(newBlog)
+                .set("Authorization", `Bearer ${loginToken}`);
 
             const blogs = (await api.get("/api/blogs/")).body;
 
-            assert(blogs.some(i => //has data from new blog
-                i.title == newBlog.title &&
-                i.user == newBlog.user
+            assert(blogs.some(i => (i.title === newBlog.title && i.user.id === newBlog.user)
             ));
 
             assert.equal(blogs.length, initialBlogs.length + 1); // amount grows by one
         });
 
         test("blog without likes is put at 0 likes", async () => {
-            const loginToken = (await api.post("/api/login/").send({username: "username1", password: "salasana123"})).body.token;
+            const loginToken = (await api.post("/api/login/").send({ username: "username1", password: "salasana123" })).body.token;
             const author = (await usersInDB())[1];
 
             const blogWithoutLikes = {
@@ -147,8 +145,8 @@ describe("initial blogs having data", () => {
                 user: author.id
             };
             await api.post("/api/blogs/")
-            .send(blogWithoutLikes)
-            .set("Authorization", `Bearer ${loginToken}`);
+                .send(blogWithoutLikes)
+                .set("Authorization", `Bearer ${loginToken}`);
 
             const allBlogs = (await api.get("/api/blogs/")).body;
             const addedBlog = allBlogs[allBlogs.length - 1];
@@ -156,9 +154,9 @@ describe("initial blogs having data", () => {
         });
 
         test("creating a blog adds its id to the authors blog list", async () => {
-            const loginToken = (await api.post("/api/login/").send({username: "username1", password: "salasana123"})).body.token;
+            const loginToken = (await api.post("/api/login/").send({ username: "username1", password: "salasana123" })).body.token;
             const author = (await usersInDB())[1];
-            
+
             const blogWithoutLikes = {
                 title: "titletitle",
                 author: "authorauthor",
@@ -167,8 +165,8 @@ describe("initial blogs having data", () => {
                 user: author.id
             };
             await api.post("/api/blogs/")
-            .send(blogWithoutLikes)
-            .set("Authorization", `Bearer ${loginToken}`);
+                .send(blogWithoutLikes)
+                .set("Authorization", `Bearer ${loginToken}`);
 
             const userWithAddedBlog = (await usersInDB())[1];
 
@@ -178,15 +176,18 @@ describe("initial blogs having data", () => {
 
     describe("when deleting one,", () => {
         test("deletion with a valid id succeeds with 200", async () => {
+            const loginToken = (await api.post("/api/login/").send({ username: "username1", password: "salasana123" })).body.token;
+
             const allBlogs = (await api.get("/api/blogs/")).body;
-            const blogToDelete = allBlogs[0];
+            const blogToDelete = allBlogs[2];
 
             await api.delete("/api/blogs/" + blogToDelete.id)
+                .set("Authorization", `Bearer ${loginToken}`)
                 .expect(200);
         });
 
         test("deletion with an invalid id fails with 404", async () => {
-            await api.delete("/api/blogs/anInvalidId123")
+            await api.delete("/api/blogs/" + await nonExistentId())
                 .expect(404);
         });
     });
@@ -224,7 +225,7 @@ describe("initial blogs having data", () => {
         });
     });
 
-describe("db having initial users,", () => {
+    describe("db having initial users,", () => {
 
         describe("when fetching all,", () => {
             test("all are returned", async () => {
@@ -273,7 +274,7 @@ describe("db having initial users,", () => {
 
             test("creation of a user with invalid data fails with 400 Bad Request", async () => {
                 const invalidData = {
-                    name: "Akseli Holopainen",
+                    name: "Akseli Holopainen"
                 }
 
                 await api.post("/api/users/")

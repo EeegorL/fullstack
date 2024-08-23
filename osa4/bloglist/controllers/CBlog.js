@@ -1,21 +1,24 @@
 const BlogRouter = require("express").Router();
 const Blog = require("../models/MBlog");
 const User = require("../models/MUser");
+const {errorHandler} = require("../utils/middleware");
+
 
 const jwt = require("jsonwebtoken");
 const { tokenExtractor } = require("../utils/middleware");
 BlogRouter.use(tokenExtractor);
 
-BlogRouter.get("/:id", async (req, res) => {
+BlogRouter.get("/:id", async (req, res, next) => {
   try {
     const result = await Blog.findOne({ "id": req.params.id }).populate("user");
-    if(result.id) {
+    if(result) {
       res.status(200).json(result);
     }
     else res.status(404).json("Blog does not exist");
   }
   catch(err) {
-    res.status(404).json(err);
+    console.log(err)
+    next(err);
   }
 });
 
@@ -24,13 +27,13 @@ BlogRouter.get("/", async (req, res) => {
   res.json(result);
 });
 
-BlogRouter.post("/", async (req, res) => {
+BlogRouter.post("/", async (req, res, next) => {
   try {
-    const decodedToken = jwt.verify(req.token, process.env.SECRET)
+    const decodedToken = jwt.verify(req.token, process.env.SECRET);
     if (!decodedToken.id) {
       return response.status(401).json({error: "invalid token"});
     }
-    const authorUser = await User.findById(decodedToken.id)
+    const authorUser = await User.findById(decodedToken.id);
 
     const blog = new Blog(req.body);
     blog.id = blog._id.toString();
@@ -44,32 +47,50 @@ BlogRouter.post("/", async (req, res) => {
     res.status(201).json(result);
   } catch (err) {
     console.log(err)
-    res.status(400).send(err);
+    next(err);
   }
 });
 
-BlogRouter.delete("/", async (req, res) => {
+BlogRouter.delete("/", async (req, res, next) => {
   try {
     const result = await Blog.deleteMany({});
     res.status(200).json(result);
   } catch (err) {
-    res.status(400).send(err.errors);
+    next(err);
   }
 });
 
-BlogRouter.delete("/:id", async (req, res) => {
+BlogRouter.delete("/:id", async (req, res, next) => {
   try {
-    const result = await Blog.deleteOne({ "id": req.params.id });
-    if(result.acknowledged && result.deletedCount == 1) {
-          res.status(200).json(result);
+    const blogToDelete = await Blog.findById(req.params.id);
+    if(blogToDelete) {
+      const decodedToken = jwt.verify(req.token, process.env.SECRET);
+      if (!decodedToken.id) {
+        return res.status(401).json({err: "invalid token"});
+      }
+      const blogToDeleteAuthor = await User.find({id: blogToDelete.user.toString()});
+      if(!(decodedToken.username === blogToDeleteAuthor[0].username)) {
+        return res.status(401).json({err: "Not authorized to delete"});
+      }
+  
+      const result = await Blog.deleteOne({ "id": req.params.id });
+  
+      if(result.acknowledged && result.deletedCount == 1) {
+            res.status(200).json(result);
+      }
+      else { // should not go here...
+        res.status(404).send("Not found");
+      }
     }
-    else res.status(404).send("Not found");
+    else {
+      res.status(404).send("Not found");
+    }
   } catch (err) {
-    res.status(400).send(err.errors);
+      next(err);
   }
 });
 
-BlogRouter.patch("/:id", async (req, res) => {
+BlogRouter.patch("/:id", async (req, res, next) => {
   try {
     const blog = req.body;
 
@@ -77,8 +98,11 @@ BlogRouter.patch("/:id", async (req, res) => {
     res.status(200).send(result);
   }
   catch(err) {
-    res.status(400).send(err.errors);
+    next(err);
   }
 });
+
+BlogRouter.use(errorHandler);
+
 
 module.exports = BlogRouter;

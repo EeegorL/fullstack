@@ -1,13 +1,13 @@
-POST http://localhost:3001/api/blogs
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRlc3RpbWllcyIsImlkIjoiNjZjNjNkN2IwNTFkMGUwZjUxZDM1OTM4IiwiaWF0IjoxNzI0MzM0NzY0fQ.Fu8yBk30H3rS9zLeaqNAWcLTmOUEbR22Nlkw3Fj2-7Y
+# POST http://localhost:3001/api/blogs
+# Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRlc3RpbWllcyIsImlkIjoiNjZjNjNkN2IwNTFkMGUwZjUxZDM1OTM4IiwiaWF0IjoxNzI0MzM0NzY0fQ.Fu8yBk30H3rS9zLeaqNAWcLTmOUEbR22Nlkw3Fj2-7Y
 
-{
-              "title": "The century of Rizz",
-              "author": "Rizz-king",
-              "url": "null",
-              "likes": 22
-}
+# {
+#               "title": "The century of Rizz",
+#               "author": "Rizz-king",
+#               "url": "null",
+#               "likes": 22
+# }
 
 
 # POST http://localhost:3001/api/users
@@ -28,5 +28,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRlc
 #   "password": "salasana"
 # }
 
-# GET http://localhost:3001/api/blogs/66c742cc59169ae5dd52a26a
+# GET http://localhost:3001/api/blogs/thisIdDoesNotExist
 # Content-Type: application/json
+
+
+DELETE http://localhost:3001/api/blogs/66c8af24876779d2b83adc59
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRlc3RpbWllcyIsImlkIjoiNjZjNjNkN2IwNTFkMGUwZjUxZDM1OTM4IiwiaWF0IjoxNzI0MzM0NzY0fQ.Fu8yBk30H3rS9zLeaqNAWcLTmOUEbR22Nlkw3Fj2-7Y
+
