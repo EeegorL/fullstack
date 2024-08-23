@@ -17,7 +17,6 @@ BlogRouter.get("/:id", async (req, res, next) => {
     else res.status(404).json("Blog does not exist");
   }
   catch(err) {
-    console.log(err)
     next(err);
   }
 });
