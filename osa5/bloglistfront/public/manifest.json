@@ -1,0 +1,6 @@
+{
+  "short_name": "Bloglist",
+  "name": "A bloglist app",
+  "start_url": ".",
+  "display": "standalone"
+}
