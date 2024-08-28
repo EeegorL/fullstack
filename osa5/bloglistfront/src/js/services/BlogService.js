@@ -1,9 +1,9 @@
-import axios from "axios";
+import axiosClient from "../utils/axiosConf";
+const client = axiosClient();
 
-export default class BlogService {
-    #path = "http://localhost:3001/api/blogs/";
-    async getAll() {
-        const result = await axios.get(this.#path);
-        return result.data;
-    }
+export async function getAll() {
+
+    const result = await client.get("/blogs");
+    return result.data;
 };
+

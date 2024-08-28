@@ -3,25 +3,27 @@ import "./index.css";
 import Footer from "./js/components/Footer";
 import Header from "./js/components/Header";
 import Main from "./js/components/Main";
-import BlogService from "./js/services/BlogService";
+
+import * as BlogService from "./js/services/BlogService";
 
 function App() {
   const [blogs, setBlogs] = useState([]);
-  const blogService = new BlogService();
+  const [user, setUser] = useState({});
+
 
 
   useEffect(() => {
     const init = async()=> {
-      const result = await blogService.getAll();
+      if(window.localStorage.loggedUser) setUser(JSON.parse(window.localStorage.loggedUser));
+      const result = await BlogService.getAll();
       setBlogs(result);
+    };init();
 
-    };
-    init();
   }, []);
 
   return (
     <div>
-      <Header/>
+      <Header user={user} setUser={setUser}/>
       <Main blogs={blogs}/>
       <Footer/>
     </div>

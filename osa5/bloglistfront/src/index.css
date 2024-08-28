@@ -1,15 +1,62 @@
 body {
     margin: 0;
+    min-height: calc(100vh - 100px);
 }
 
 .main {
     margin: 50px;
 }
 
-.footer {
+.login {
+    min-width: 20vw;
+    color: black;
+}
+.login label, input {
+    margin: 5px;
+}
+.login form {
+    border: 1px solid black;
+    background-color: white;
+    padding: 10px;
+}
 
+.footer {
+    background-color: black;
+    padding: 25px;
+    color: white;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position:absolute;
 }
 
 .header {
-    
+    background-color: black;
+    padding: 25px;
+    color: white;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.errMsg {
+    background: rgb(255, 77, 77);
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.headerSideButtons {
+    right: 0;
+    display: inline;
+    position: fixed;
+    margin-right: 50px;
+    display: inline;
+    vertical-align: middle;
+    margin-top: -20px;
+}
+
+.loginFormButtonShow {
+    margin-left: 150vw;
 }

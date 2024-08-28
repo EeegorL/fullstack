@@ -3,3 +3,5 @@ osa3/3.13-3.22/.env
 osa4/bloglist/.env
 osa4/restTests/restthings.rest
 .gitignore
+osa5/bloglistback/.env
+osa5/bloglistfront/.env
