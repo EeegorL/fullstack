@@ -36,7 +36,6 @@ BlogRouter.post("/", async (req, res, next) => {
     authorUser.save();
 
     const result = await blog.save();
-
     res.status(201).json(result);
   } catch (err) {
     next(err);

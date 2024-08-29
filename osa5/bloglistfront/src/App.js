@@ -5,26 +5,36 @@ import Header from "./js/components/Header";
 import Main from "./js/components/Main";
 
 import * as BlogService from "./js/services/BlogService";
+import Login from "./js/components/Login";
 
 function App() {
   const [blogs, setBlogs] = useState([]);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState();
 
 
 
   useEffect(() => {
     const init = async()=> {
-      if(window.localStorage.loggedUser) setUser(JSON.parse(window.localStorage.loggedUser));
+      //set blogs
       const result = await BlogService.getAll();
       setBlogs(result);
+
+      //set logged user
+      if(window.localStorage.loggedUser) {
+        setUser(JSON.parse(window.localStorage.loggedUser));
+      }
     };init();
 
-  }, []);
 
+
+  }, []);
   return (
     <div>
       <Header user={user} setUser={setUser}/>
-      <Main blogs={blogs}/>
+      {user
+      ? <Main blogs={blogs} setBlogs={setBlogs} user={user}/>
+      : <Login setUser={setUser}/>
+    }
       <Footer/>
     </div>
   );

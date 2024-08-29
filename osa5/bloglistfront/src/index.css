@@ -27,7 +27,7 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    position:absolute;
+    position:relative;
 }
 
 .header {
@@ -37,10 +37,20 @@ body {
     top: 0;
     left: 0;
     right: 0;
+    position: relative;
+}
+
+.headerMain {
+    border: 10px dotted rgb(255, 185, 44);
+    padding: 5px;
+    width: fit-content;
 }
 
 .errMsg {
     background: rgb(255, 77, 77);
+}
+.successMsg {
+    background-color: rgb(78, 223, 45);
 }
 
 .hidden {
@@ -50,13 +60,58 @@ body {
 .headerSideButtons {
     right: 0;
     display: inline;
-    position: fixed;
+    position:sticky;
     margin-right: 50px;
     display: inline;
     vertical-align: middle;
-    margin-top: -20px;
+    float: right;
 }
 
+.headerSideButtons span {
+    padding: 2vw;
+}
+
+.headerH1 {
+    display: inline;
+}
 .loginFormButtonShow {
     margin-left: 150vw;
+}
+
+.loginMain {
+    text-align: center;
+    padding: 2vw;
+    margin: 2vh;
+    border: 2px solid black;
+    width: fit-content;
+    box-sizing: content-box;
+}
+
+.addBlogForm {
+    display: inline;
+}
+.addBlogForm p {
+    padding: 0;
+    margin: 0;
+}
+.addBlogForm span {
+    display: block;
+}
+
+.blogListItemContainer {
+    display:flex;
+    width: fit-content;
+    padding: 15px;
+    padding-right: 15vw;
+}
+
+.blogListItemContainer span {
+    padding: 5px;
+}
+
+.invisible {
+    opacity: 0;
+}
+.transparent {
+    opacity: 0.1;
 }

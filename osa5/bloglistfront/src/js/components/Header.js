@@ -1,4 +1,4 @@
-import Login from "./Login";
+import LoginModal from "./LoginModal";
 
 const Header = ({ user, setUser }) => {
 
@@ -14,15 +14,17 @@ const Header = ({ user, setUser }) => {
         window.localStorage.clear();
         setUser();
     };
-
     return <header className="header">
-        <div>Header</div>
+        <h1 className="headerH1">Header</h1>
         <div className="headerSideButtons">
-        {window.localStorage.loggedUser
-            ? <button onClick={signOut}>Sign out</button>
+        {user
+            ? <span>
+                <span>{user.username}</span>
+                <button onClick={signOut}>Sign out</button>
+            </span>
             : <button onClick={showLogin}>Login</button>
         }
-        <Login setUser={setUser} className="loginFormShowButton"/>
+        <LoginModal setUser={setUser} className="loginFormShowButton"/>
         </div>
     </header>
 };

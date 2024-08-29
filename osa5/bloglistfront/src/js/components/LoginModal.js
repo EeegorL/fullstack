@@ -3,7 +3,7 @@ import axiosClient from "../utils/axiosConf";
 import showMsg from "../utils/info";
 
 const client = axiosClient();
-const Login = ({setUser}) => { //not really a modal but idk this will do
+const LoginModal = ({setUser}) => { //not really a modal but idk this will do
     const [err, setErr] = useState("");
 
     const login = async(e) => {
@@ -20,12 +20,12 @@ const Login = ({setUser}) => { //not really a modal but idk this will do
                 window.localStorage.setItem("loggedUser", JSON.stringify(login.data));
                 setUser(login.data);
 
-                // const form = document.getElementById("loginForm");
+                const form = document.getElementById("loginForm");
 
 
-                // form.classList.contains("hidden")
-                //     ? form.classList.remove("hidden")
-                //     : form.classList.add("hidden");
+                form.classList.contains("hidden")
+                    ? form.classList.remove("hidden")
+                    : form.classList.add("hidden");
             }
             usernameField.value = "";
             passwordField.value = "";
@@ -35,12 +35,10 @@ const Login = ({setUser}) => { //not really a modal but idk this will do
         }
     };
 
-    return <div className="loginMain">
+    return <div className="login">
+        <form onSubmit={login} id="loginForm" className="hidden">
         <h2>Sign in</h2>
-        <p>Kalle : Kulle</p>
-        <p>Testimies : salasana</p>
         <p name="errorField" className="errMsg">{err}</p>
-        <form onSubmit={login} id="loginForm">
         <label>Username<input name="username"/></label>
         <br/>
         <label>Password<input name="password"/></label>
@@ -50,4 +48,4 @@ const Login = ({setUser}) => { //not really a modal but idk this will do
         </div>
 };
 
-export default Login;
+export default LoginModal;
