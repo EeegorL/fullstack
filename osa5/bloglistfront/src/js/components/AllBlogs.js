@@ -1,4 +1,6 @@
-const AllBlogs = ({blogs, user}) => {
+import AddBlogForm from "./AddBlogForm";
+
+const AllBlogs = ({blogs, setBlogs, user}) => {
     const showDelete = (e) => {
         e.target.classList.remove("transparent");
 
@@ -10,6 +12,7 @@ const AllBlogs = ({blogs, user}) => {
 
     return <div>
         <h1 className="headerMain">Rizz kuningas on täällä!</h1>
+        <AddBlogForm user={user} setBlogs={setBlogs}/>
         <h2>All blogs:</h2>
         {blogs.map(blog => {
             return <div key={blog.id} className="blogListItemContainer">

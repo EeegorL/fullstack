@@ -1,8 +1,10 @@
 const bcrypt = require("bcrypt");
 const UserRouter = require("express").Router();
 const User = require("../models/MUser");
-const {errorHandler} = require("../utils/middleware");
+const {errorHandler, tokenIsValid, validateSession} = require("../utils/middleware");
 const { usersInDB } = require("../utils/users_helper");
+
+// UserRouter.use(validateSession)
 
 UserRouter.post("/", async (req, res, next) => {
     try {

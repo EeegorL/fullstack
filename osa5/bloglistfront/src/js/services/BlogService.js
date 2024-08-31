@@ -2,13 +2,17 @@ import axiosClient from "../utils/axiosConf";
 const client = axiosClient();
 
 export async function getAll() {
-    const result = await client.get("/blogs");
+    const result = await client.get("/blogs", 
+        {headers: {"Authorization": `Bearer ${window.localStorage.loggedUser}`}}
+    );
     return result.data;
 };
 
 export async function getOneById(id) {
     try {
-        const result = await client.get("/blogs/" + id);
+        const result = await client.get("/blogs/" + id, 
+            {headers: {"Authorization": `Bearer ${window.localStorage.loggedUser}`}}
+        );
         return result;
     }
     catch(err) {
@@ -19,7 +23,9 @@ export async function getOneById(id) {
 
 export async function deleteOne(id) {
     try {
-        const result = await client.delete("/blogs/" + id);
+        const result = await client.delete("/blogs/" + id, 
+            {headers: {"Authorization": `Bearer ${window.localStorage.loggedUser}`}}
+        );
         return result;
     }
     catch(err) {
@@ -29,7 +35,9 @@ export async function deleteOne(id) {
 
 export async function addOne(body) {
     try {
-        const result = await client.post("/blogs/", body, {headers: {"Authorization": `Bearer ${body.user}`}});
+        const result = await client.post("/blogs/", body, 
+            {headers: {"Authorization": `Bearer ${window.localStorage.loggedUser}`}}
+        );
         return {success: true, message: "Blog added!"};
     }
     catch(err) {

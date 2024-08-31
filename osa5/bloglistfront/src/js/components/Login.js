@@ -1,8 +1,7 @@
 import { useState } from "react";
-import axiosClient from "../utils/axiosConf";
 import showMsg from "../utils/info";
+import * as LoginService from "../services/LoginService";
 
-const client = axiosClient();
 const Login = ({setUser}) => { //not really a modal but idk this will do
     const [err, setErr] = useState("");
 
@@ -15,17 +14,10 @@ const Login = ({setUser}) => { //not really a modal but idk this will do
             const username = usernameField.value;
             const password = passwordField.value;
 
-            const login = await client.post("/login", {username, password});
+            const login = await LoginService.login({username, password});
             if(login) {
                 window.localStorage.setItem("loggedUser", JSON.stringify(login.data));
                 setUser(login.data);
-
-                // const form = document.getElementById("loginForm");
-
-
-                // form.classList.contains("hidden")
-                //     ? form.classList.remove("hidden")
-                //     : form.classList.add("hidden");
             }
             usernameField.value = "";
             passwordField.value = "";

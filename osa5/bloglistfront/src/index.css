@@ -54,7 +54,11 @@ body {
 }
 
 .hidden {
-    visibility: hidden;
+    visibility: hidden !important;
+}
+
+.noDisplay {
+    display: none !important;
 }
 
 .headerSideButtons {

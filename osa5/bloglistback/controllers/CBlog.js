@@ -1,7 +1,12 @@
 const BlogRouter = require("express").Router();
 const Blog = require("../models/MBlog");
 const User = require("../models/MUser");
-const {errorHandler} = require("../utils/middleware");
+const {errorHandler, tokenExtractor, userExtractor, validateSession} = require("../utils/middleware");
+
+BlogRouter.use(tokenExtractor);
+BlogRouter.use(userExtractor);
+// BlogRouter.use(validateSession);
+
 
 BlogRouter.get("/:id", async (req, res, next) => {
   try {

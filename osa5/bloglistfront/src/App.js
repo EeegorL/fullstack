@@ -5,6 +5,7 @@ import Header from "./js/components/Header";
 import Main from "./js/components/Main";
 
 import * as BlogService from "./js/services/BlogService";
+import * as LoginService from "./js/services/LoginService";
 import Login from "./js/components/Login";
 
 function App() {
@@ -21,11 +22,14 @@ function App() {
 
       //set logged user
       if(window.localStorage.loggedUser) {
-        setUser(JSON.parse(window.localStorage.loggedUser));
+        if(await LoginService.verifySession(window.localStorage.loggedUser)) {
+          setUser(JSON.parse(window.localStorage.loggedUser));
+        }
+        else {
+          window.localStorage.clear();
+        }
       }
     };init();
-
-
 
   }, []);
   return (
