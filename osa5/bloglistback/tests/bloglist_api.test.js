@@ -24,9 +24,10 @@ describe("initial blogs having data", () => {
         await User.deleteMany({});
 
         for (let data of initialUsers) {
-            data.password = await bcrypt.hash(data.password, sRounds); // should not be on the client side, but since these are tests its acceptable
-
+            let password = await bcrypt.hash(data.password, sRounds); // should not be on the client side, but since these are tests its acceptable
+           
             let newUser = new User(data);
+            newUser.password = password;
             newUser.id = newUser._id.toString();
             await newUser.save();
         }
