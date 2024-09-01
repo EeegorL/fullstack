@@ -12,18 +12,19 @@ function App() {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState();
 
-
+  // window.localStorage.clear();
 
   useEffect(() => {
     const init = async()=> {
       //set blogs
-      const result = await BlogService.getAll();
-      setBlogs(result);
+
 
       //set logged user
       if(window.localStorage.loggedUser) {
         if(await LoginService.verifySession(window.localStorage.loggedUser)) {
           setUser(JSON.parse(window.localStorage.loggedUser));
+          const result = await BlogService.getAll();
+          setBlogs(result);
         }
         else {
           window.localStorage.clear();
