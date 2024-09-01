@@ -50,7 +50,7 @@ const userExtractor = (req, res, next) => {
 
 const validateSession = async (req, res, next) => {
     try {
-        let token = JSON.parse(req.token).token;
+        let token = req.token;
         await jwt.verify(token, process.env.SECRET);
         next();
     }

@@ -5,7 +5,7 @@ const {errorHandler, tokenExtractor, userExtractor, validateSession} = require("
 
 BlogRouter.use(tokenExtractor);
 BlogRouter.use(userExtractor);
-// BlogRouter.use(validateSession);
+BlogRouter.use(validateSession);
 
 
 BlogRouter.get("/:id", async (req, res, next) => {

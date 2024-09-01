@@ -31,7 +31,7 @@ function App() {
       }
     };init();
 
-  }, []);
+  }, [window.localStorage.loggedUser]);
   return (
     <div>
       <Header user={user} setUser={setUser}/>
